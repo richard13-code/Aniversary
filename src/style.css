@@ -1859,3 +1859,37 @@ h1, h2, .hero-titulo, .franja-titulo {
     bottom: 16px;
   }
 }
+
+/* Estilo del menú desplegable cuando se abre en el celular */
+@media (max-width: 700px) {
+  .navbar-inner {
+    position: relative;
+  }
+
+  .navbar-tabs.abierto {
+    display: flex;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: rgba(20, 8, 22, 0.92);
+    backdrop-filter: blur(12px) saturate(150%);
+    -webkit-backdrop-filter: blur(12px) saturate(150%);
+    padding: 16px 20px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    z-index: 50;
+  }
+
+  .navbar-tabs.abierto .tab-btn {
+    width: 100%;
+    text-align: left;
+    padding: 10px 14px;
+    border-radius: 8px;
+  }
+
+  .navbar-tabs.abierto .tab-btn:hover,
+  .navbar-tabs.abierto .tab-btn.activo {
+    background: rgba(201, 162, 75, 0.2);
+  }
+}

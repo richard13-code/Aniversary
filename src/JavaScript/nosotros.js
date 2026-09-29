@@ -21,3 +21,13 @@ if (elDiasJuntos) {
   actualizarDiasJuntos();
   setInterval(actualizarDiasJuntos, 60 * 60 * 1000);
 }
+
+// Control del Menú Hamburguesa en Dispositivos Móviles
+const btnMenuMovil = document.getElementById('btn-menu-movil');
+const navbarTabs = document.getElementById('navbar-tabs');
+
+if (btnMenuMovil && navbarTabs) {
+  btnMenuMovil.addEventListener('click', () => {
+    navbarTabs.classList.toggle('abierto');
+  });
+}
