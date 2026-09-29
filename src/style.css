@@ -1,0 +1,1861 @@
+/* =================================================================
+   CÓMO FUNCIONA CSS (rápido):
+   Cada bloque es:   selector { propiedad: valor; }
+   - .clase       -> afecta a todos los elementos con class="clase"
+   - #id          -> afecta al ÚNICO elemento con ese id
+   - etiqueta     -> afecta a TODAS las etiquetas de ese tipo (ej: h1)
+   ================================================================= */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --crema: #faf6f0;
+  --texto: #332920;
+  --dorado: #c9a24b;
+  --rosa: #d88fa0;
+  --rosa-claro: #f3dbe1;
+  --vino: #2b1f33;
+  --vino-claro: #3d2c48;
+}
+
+/*
+  El truco de "full-bleed" que usamos en .hero y .franja-oscura
+  (width:100vw + margin negativo) a veces se pasa por unos pixeles del
+  ancho real de la pantalla (100vw a veces incluye el grosor de la
+  barra de scroll, que varía por navegador). Eso genera una franja
+  angosta de scroll horizontal, y por ahí se asoma el color de fondo
+  de atrás (el rosa clarito de .hero) como una tira "cortada" a un
+  lado. overflow-x:hidden en html/body corta cualquier desborde
+  horizontal para que eso nunca sea visible, sin afectar el scroll
+  vertical normal de la página.
+*/
+html {
+  overflow-x: hidden;
+}
+
+body {
+  overflow-x: hidden;
+  font-family: 'Poppins', 'Segoe UI', Arial, sans-serif;
+  background: var(--crema);
+  color: var(--texto);
+  line-height: 1.6;
+}
+
+h1, h2, .hero-titulo, .franja-titulo {
+  font-family: 'Playfair Display', Georgia, serif;
+}
+
+/* =================================================================
+   PANTALLA DE INTRO
+   ================================================================= */
+/*
+  Degradado tipo "San Valentín": rojo intenso arriba-izquierda que se
+  funde a rosa/magenta y termina en morado oscuro abajo-derecha. Un
+  radial-gradient encimado le da un "brillo" suave desde el centro,
+  como si hubiera una luz cálida detrás del sobre.
+*/
+#intro-screen {
+  position: fixed;
+  inset: 0;
+  overflow: hidden; /* para que los corazones flotantes no generen scroll */
+  background:
+    radial-gradient(circle at 50% 40%, rgba(255, 105, 135, 0.55) 0%, transparent 55%),
+    linear-gradient(150deg, #b3123f 0%, #8a1258 35%, #5b1465 65%, #2e0f3d 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+#intro-screen.cerrado {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* =================================================================
+   CORAZONES DECORATIVOS DE FONDO (puro ambiente, no interactivos)
+   ================================================================= */
+.corazones-flotantes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none; /* nunca bloquean el clic al botón de abajo */
+}
+
+.corazon-decorativo {
+  position: absolute;
+  bottom: -60px;
+  opacity: 0;
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.25));
+  animation-name: flotarFondo;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+/*
+  Cada corazón tiene su propia posición horizontal (left), tamaño
+  (font-size), duración y "delay" (retraso de inicio), para que no
+  todos suban a la vez ni en fila, sino de forma dispersa y orgánica.
+*/
+.c1 { left: 6%;  font-size: 1.6rem; animation-duration: 9s;  animation-delay: 0s; }
+.c2 { left: 18%; font-size: 1.1rem; animation-duration: 7s;  animation-delay: 1.5s; }
+.c3 { left: 32%; font-size: 2rem;   animation-duration: 11s; animation-delay: 3s; }
+.c4 { left: 48%; font-size: 1.3rem; animation-duration: 8s;  animation-delay: 0.5s; }
+.c5 { left: 62%; font-size: 1.7rem; animation-duration: 10s; animation-delay: 4s; }
+.c6 { left: 75%; font-size: 1.2rem; animation-duration: 7.5s; animation-delay: 2s; }
+.c7 { left: 85%; font-size: 1.9rem; animation-duration: 12s; animation-delay: 1s; }
+.c8 { left: 94%; font-size: 1.4rem; animation-duration: 9.5s; animation-delay: 3.5s; }
+
+@keyframes flotarFondo {
+  0%   { transform: translateY(0) scale(0.8) rotate(0deg); opacity: 0; }
+  12%  { opacity: 0.55; }
+  50%  { transform: translateY(-48vh) scale(1.05) rotate(8deg); }
+  88%  { opacity: 0.5; }
+  100% { transform: translateY(-95vh) scale(0.9) rotate(-6deg); opacity: 0; }
+}
+
+.intro-content {
+  position: relative;
+  z-index: 1; /* encima de los corazones de fondo */
+  text-align: center;
+  color: white;
+}
+
+/* Línea chiquita en cursiva, como si fuera escrita a mano en una
+   tarjeta de San Valentín */
+.intro-script {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  color: #ffd9e3;
+  margin-bottom: 6px;
+  letter-spacing: 0.5px;
+}
+
+.intro-pre {
+  font-size: 1.2rem;
+  margin-bottom: 24px;
+}
+
+/*
+  El botón lleva DOS animaciones a la vez, separadas por coma: la que
+  ya teníamos (flotar = sube y baja) y una nueva (resplandor = el
+  brillo alrededor se hace más fuerte y más débil), para que se vea
+  como si "latiera" suavemente.
+*/
+#btn-abrir-intro {
+  font-size: 4.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  animation: flotar 2s ease-in-out infinite, resplandor 2.2s ease-in-out infinite;
+}
+
+@keyframes flotar {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-15px); }
+}
+
+@keyframes resplandor {
+  0%, 100% { filter: drop-shadow(0 0 12px rgba(255, 130, 170, 0.55)); }
+  50%      { filter: drop-shadow(0 0 32px rgba(255, 130, 170, 0.9)); }
+}
+
+#confetti-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 200;
+}
+
+/* =================================================================
+   HEADER ESTILO BOUTIQUE (logo serif + pestañas)
+   ================================================================= */
+/*
+  Antes la barra era "sticky" (ocupaba su propio espacio arriba y la
+  foto empezaba después de ella). Ahora la queremos "fundida" con la
+  imagen, como si no tuviera fondo propio: para eso la sacamos del
+  flujo normal con "position: fixed" (flota encima de TODO, sin
+  empujar nada hacia abajo) y le damos un fondo semitransparente en
+  vez de sólido. Ese degradado oscuro muy suave + el "blur" de atrás
+  son lo que permite seguir leyendo el texto blanco tanto sobre la
+  foto como sobre el fondo crema del resto de las pestañas.
+*/
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 60;
+  background: linear-gradient(180deg, rgba(20, 8, 22, 0.5) 0%, rgba(20, 8, 22, 0.08) 100%);
+  backdrop-filter: blur(8px) saturate(150%);
+  -webkit-backdrop-filter: blur(8px) saturate(150%);
+  border-bottom: none;
+}
+
+/*
+  El logo se posiciona respecto a .navbar (que es el "abuelo" más
+  cercano con position != static). Al estar FUERA del contenedor
+  centrado (.navbar-inner), "left: 16px" lo pega a la esquina real
+  de la pantalla, sin importar qué tan ancho sea el monitor.
+  El drop-shadow le da un contorno sutil para que se distinga bien
+  incluso sobre partes claras de la foto.
+*/
+.brand-logo {
+  position: absolute;
+  top: 8px;
+  left: 16px;
+  height: 44px;
+  width: auto;
+  display: block;
+  filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.45));
+}
+
+.navbar-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 14px 20px;
+}
+
+.brand {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.3rem;
+  letter-spacing: 1px;
+  /* Antes era var(--texto) (café oscuro), que se perdía sobre la
+     foto. Blanco + una sombrita se lee bien sobre cualquier fondo. */
+  color: white;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+  white-space: nowrap;
+  /*
+    Le dejamos espacio a la izquierda para que el texto nunca quede
+    debajo o pegado al logo (que ahora vive en la esquina, fuera de
+    este contenedor). Ajusta este número si tu logo es más ancho.
+  */
+  margin-left: 60px;
+}
+
+.navbar-tabs {
+  position: relative; /* necesario para que el indicador (position:absolute) se ubique respecto a esta barra */
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+/* =================================================================
+   PESTAÑAS: un solo "vidrio" que se DESLIZA de un botón a otro
+   ================================================================= */
+/*
+  En vez de que cada botón tenga su propio brillo independiente (lo
+  que se sentía "cortado" al pasar de uno a otro), ahora hay un único
+  elemento (.tab-glass-indicador) que el JS mueve de posición según
+  qué botón estás tocando con el mouse. Como acá abajo le damos
+  "transition" a left/width, el navegador anima ese movimiento solo,
+  y se ve como una gota de vidrio deslizándose de un lado a otro,
+  fluida y continua, en vez de prender/apagar cada botón por separado.
+*/
+.tab-glass-indicador {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0;
+  border-radius: 18px;
+  z-index: 0;
+  pointer-events: none; /* para que nunca "robe" el clic al botón de abajo */
+
+  background: rgba(201, 162, 75, 0.16);
+  border: 1px solid rgba(201, 162, 75, 0.35);
+  backdrop-filter: blur(10px) saturate(180%);
+  -webkit-backdrop-filter: blur(10px) saturate(180%);
+
+  opacity: 0;
+  transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.25s ease;
+}
+
+.tab-glass-indicador.visible {
+  opacity: 1;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  /* Blanco en vez de café oscuro: ahora la barra ya no tiene fondo
+     sólido, así que el texto tiene que leerse sobre la foto. */
+  color: white;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  font-size: 0.8rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: 9px 16px;
+  position: relative;
+  z-index: 1; /* encima del indicador, para que el texto siempre se lea */
+  opacity: 0.85;
+  border-radius: 18px;
+  transition: opacity 0.2s ease, color 0.2s ease;
+}
+
+.tab-btn:hover {
+  opacity: 1;
+  color: var(--dorado);
+}
+
+/* La pestaña activa lleva además una rayita dorada debajo */
+.tab-btn.activo {
+  opacity: 1;
+  color: var(--dorado);
+}
+
+.tab-btn.activo span {
+  position: relative;
+}
+
+.tab-btn.activo span::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -8px;
+  height: 2px;
+  background: var(--dorado);
+}
+
+.btn-menu-movil {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  color: white;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+  margin-left: auto;
+}
+
+/* =================================================================
+   PANELES (contenido de cada pestaña)
+   ================================================================= */
+.tab-panel {
+  display: none;
+  text-align: center;
+  min-height: 50vh;
+}
+
+.tab-panel.activo {
+  display: block;
+  animation: aparecerGlass 0.45s ease;
+}
+
+@keyframes aparecerGlass {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.99);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+.tab-panel h2 {
+  font-size: 1.7rem;
+  color: var(--texto);
+  margin-bottom: 8px;
+}
+
+/*
+  Como .navbar ahora es "fixed" (ya no ocupa espacio propio), todo lo
+  demás se recorrería hacia arriba y quedaría tapado por la barra.
+  Este padding-top empuja el contenido hacia abajo lo mismo que mide
+  la barra (~78px), para que nada quede escondido debajo de ella.
+  El .hero cancela este espacio con un margin-top negativo (ver
+  abajo), así que SOLO la foto de portada llega hasta arriba de todo
+  y se ve "detrás" de la barra transparente; el resto de secciones sí
+  respeta este espacio.
+*/
+#main-content {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding-top: 78px;
+}
+
+.descripcion {
+  opacity: 0.7;
+  margin-bottom: 25px;
+  padding: 0 20px;
+}
+
+.slogan {
+  font-style: italic;
+  font-family: 'Playfair Display', Georgia, serif;
+  color: var(--rosa);
+  font-size: 1.1rem;
+  margin-bottom: 22px;
+  padding: 0 20px;
+}
+
+.subtitulo-seccion {
+  text-align: left;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 0.8rem;
+  opacity: 0.6;
+  margin: 30px 20px 14px;
+}
+
+.espacio-libre {
+  margin: 10px 20px;
+}
+
+/* =================================================================
+   HERO: ocupa TODO el ancho de la pantalla + carrusel de 3 fotos
+   ================================================================= */
+/*
+  Igual truco que usamos en .franja-oscura: aunque #main-content
+  tiene un max-width que centra el contenido, con
+  width:100vw + left:50% + márgenes negativos de -50vw hacemos que
+  ESTE elemento en particular "se salga" de ese límite y ocupe todo
+  el ancho real de la pantalla del navegador (edge to edge).
+*/
+.hero {
+  position: relative;
+  width: 100vw;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  /*
+    margin-top negativo = exactamente el padding-top que le pusimos a
+    #main-content. Así el hero "recupera" ese espacio y su foto llega
+    hasta el borde de arriba (y = 0), quedando detrás de la barra fija
+    y transparente en vez de empezar debajo de ella.
+  */
+  margin-top: -78px;
+  /*
+    21/9 daba una franja muy delgada. 16/9 es más alta, así que se ve
+    más foto (más "espacio" como pediste) sin volverse exagerada.
+  */
+  aspect-ratio: 16 / 9;
+  max-height: 640px;
+  overflow: hidden;
+  background: var(--rosa-claro);
+}
+
+/* Contenedor de las 3 fotos, una encima de otra (position:absolute) */
+.hero-slides {
+  position: absolute;
+  inset: 0;
+}
+
+/*
+  Cada foto empieza invisible (opacity:0). Solo la que tiene la clase
+  "activo" se muestra (opacity:1). Como ambas están en el MISMO lugar
+  (position:absolute, inset:0) y opacity tiene "transition", el
+  cambio entre una y otra se ve como un fundido (crossfade) suave,
+  en vez de un salto brusco.
+*/
+/*
+  Antes esto era solo un "crossfade" (opacity 0 -> 1), que se ve
+  plano: las dos fotos se quedan quietas en su lugar y solo una se
+  desvanece mientras la otra aparece.
+
+  Ahora agregamos "transform" a la mezcla: la foto que NO está activa
+  vive corrida un poco a la derecha (translateX) y un poco más chica
+  (scale). Como el JS solo agrega/quita la clase "activo" (no sabe
+  cuál foto es "la anterior" ni "la siguiente"), este mismo cambio de
+  estilo sirve para las dos direcciones a la vez:
+    - La foto que SE VA pasa de (centrada, tamaño normal) a (corrida,
+      chica, invisible) -> se siente como si "retrocediera".
+    - La foto que ENTRA hace exactamente lo contrario, de (corrida,
+      chica, invisible) a (centrada, tamaño normal) -> se siente como
+      si se deslizara y creciera por encima de la anterior.
+  Y como la foto activa tiene z-index más alto, la que entra siempre
+  queda "por encima" de la que sale mientras se cruzan.
+*/
+.hero-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: translateX(6%) scale(0.94);
+  transition: opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hero-slide.activo {
+  opacity: 1;
+  transform: translateX(0) scale(1);
+  z-index: 1;
+}
+
+.hero-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 2px dashed var(--rosa);
+  color: var(--rosa);
+}
+
+.hero-placeholder span {
+  font-size: 2.2rem;
+}
+
+.hero-foto {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* El texto queda FIJO encima de las 3 fotos, con z-index más alto
+   para no quedar tapado por ninguna */
+.hero-texto {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /*
+    Antes: max-width:480px + margin:0 auto -> una caja angosta
+    centrada, más chica que la foto de fondo. Ahora: width:100% (y
+    max-width:100% para no dejar ningún límite) hace que este fondo
+    cubra EXACTAMENTE el mismo ancho que las fotos de portada, de
+    borde a borde del hero. El texto (título, fecha, botón) sigue
+    viéndose del lado izquierdo porque son elementos en columna
+    (flex-direction:column) y por defecto se acomodan pegados al
+    inicio, no porque la caja sea angosta.
+  */
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  /*
+    Antes el padding era 40px parejo. En ventanas anchas pero poco
+    altas, la foto (que mide su altura solo con aspect-ratio) puede
+    salir más bajita de lo que este bloque de texto necesita, y
+    entonces el texto se sale por arriba, tapado por la barra. Bajar
+    el padding vertical (arriba/abajo) le da más margen de sobra al
+    texto sin tocar el tamaño de la foto ni hacerla más alta.
+  */
+  padding: 20px 40px;
+  /*
+    Un solo color con transparencia pareja en todo el bloque: mismo
+    morado oscuro (43,31,51), 50% de opacidad en TODAS partes (antes
+    era un gradiente que se iba aclarando de un lado a otro).
+  */
+  background: rgba(43, 31, 51, 0.5);
+  color: white;
+}
+
+/* Los puntitos de abajo, para saber en qué foto vas (y poder elegir) */
+.hero-dots {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 6;
+  display: flex;
+  gap: 8px;
+}
+
+.hero-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.2s ease, width 0.2s ease;
+}
+
+.hero-dot:hover {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+/* El puntito de la foto activa se pinta dorado y se alarga un poco,
+   como en los carruseles de tienda */
+.hero-dot.activo {
+  background: var(--dorado);
+  width: 22px;
+  border-radius: 4px;
+}
+
+.hero-caption {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 0.75rem;
+  color: var(--dorado);
+  margin-bottom: 6px;
+}
+
+/*
+  clamp(mínimo, preferido, máximo): el tamaño de letra "preferido" es
+  5vh (5% de la altura de la ventana), así que en ventanas bajitas el
+  título se achica solo, y en ventanas altas no pasa de 2.6rem ni baja
+  de 1.8rem. Esto es justo lo que evita que el texto necesite más
+  espacio del que la foto (que también depende del ancho/alto de la
+  ventana) le puede dar.
+*/
+.hero-titulo {
+  font-size: clamp(1.8rem, 5vh, 2.6rem);
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+.hero-fecha-italic {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: 1.15rem;
+  color: var(--rosa-claro);
+  margin-bottom: 10px;
+}
+
+.hero-subtitulo {
+  font-size: 0.88rem;
+  opacity: 0.9;
+  margin-bottom: 14px;
+  max-width: 340px;
+  /*
+    ¿Por qué esta frase se veía pegada a la izquierda mientras el
+    título/fecha se veían centrados? .hero-caption y .hero-titulo NO
+    tienen max-width, así que ocupan TODO el ancho de .hero-texto, y
+    su texto (centrado por herencia desde .tab-panel) se ve centrado
+    en toda esa franja. Esta frase SÍ tiene max-width:340px, y sin un
+    margin que reparta el espacio sobrante, la caja se queda pegada
+    al lado izquierdo (comportamiento por defecto de flexbox) aunque
+    el TEXTO de adentro esté centrado dentro de esos 340px.
+    Con "margin: 0 auto" la cajita de 340px también se centra dentro
+    del ancho completo, igual que el título y la fecha.
+  */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.hero-boton {
+  align-self: flex-start;
+  background: var(--crema);
+  color: var(--texto);
+  border: none;
+  padding: 13px 26px;
+  font-size: 0.78rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.hero-boton:hover {
+  background: var(--dorado);
+  color: white;
+}
+
+/* =================================================================
+   FRANJA OSCURA ELEGANTE (para el countdown)
+   ================================================================= */
+/*
+  Antes era un morado casi negro (var(--vino)), y el título "Nos vemos
+  en..." se perdía. Ahora es un degradado rojo-morado más claro y con
+  más "vida" (parecido al de la pantalla de intro), que sigue siendo
+  lo bastante oscuro para que el texto blanco se siga leyendo bien,
+  pero ya no es un bloque plano y opaco.
+*/
+.franja-oscura {
+  background: linear-gradient(135deg, #7a1c3f 0%, #8a1258 45%, #5b1465 100%);
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  margin-top: 50px;
+  padding: 50px 20px;
+}
+
+.franja-oscura-inner {
+  max-width: 480px;
+  margin: 0 auto;
+  text-align: center;
+  color: white;
+}
+
+.franja-caption {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 0.72rem;
+  color: var(--dorado);
+  margin-bottom: 8px;
+}
+
+.franja-titulo {
+  /*
+    Antes no tenía "color" propio, así que dependía de heredar el
+    blanco de ".franja-oscura-inner" — y aparentemente algo lo hacía
+    verse muy tenue. Ahora se lo damos explícito, en negritas, y le
+    agregamos una sombra oscura debajo (text-shadow) para que
+    resalte incluso si hay corazones de confeti pasando encima.
+  */
+  color: white;
+  font-weight: 700;
+  font-size: 1.8rem;
+  margin-bottom: 6px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.franja-fecha {
+  font-style: italic;
+  color: var(--rosa-claro);
+  opacity: 0.9;
+  margin-bottom: 28px;
+}
+
+.countdown-grid {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.countdown-box {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 10px;
+  padding: 16px 18px;
+  min-width: 75px;
+}
+
+.countdown-box span {
+  display: block;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.9rem;
+  color: var(--dorado);
+}
+
+.countdown-box small {
+  color: rgba(255,255,255,0.7);
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  letter-spacing: 1px;
+}
+
+/* =================================================================
+   NOSOTROS
+   ================================================================= */
+
+/*
+  Contenedor de los 2 marcos de foto + el hilo. "position:relative"
+  es importante: el hilo (".hilo-rojo") usa position:absolute, y eso
+  siempre se posiciona respecto al ancestro más cercano que tenga
+  "position" distinto de "static" — que es justo este div.
+*/
+/*
+  Fondo "atardecer" detrás de las fotos: un degradado de varios
+  colores (naranja -> rosa -> morado, como un cielo al caer el sol),
+  más un "sol" hecho con un segundo degradado radial (el círculo
+  suave abajo a la derecha). Se lo damos SOLO a este contenedor (no a
+  toda la pestaña) para que el título, las tarjetas y el resto sigan
+  viéndose igual que antes.
+*/
+.nosotros-fotos {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 60px;
+  margin: 10px 20px 32px;
+  padding: 44px 20px 54px;
+  border-radius: 22px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 78% 70%, rgba(255, 236, 179, 0.55) 0%, rgba(255, 236, 179, 0) 40%),
+    linear-gradient(180deg, #ffb26b 0%, #f7567c 42%, #b0508c 70%, #5b3d7a 100%);
+}
+
+.nosotros-foto-marco {
+  position: relative;
+  z-index: 2; /* encima del hilo, para que el hilo se vea "detrás" de las fotos */
+  flex: 0 0 220px; /* antes 190px: aún más grandes para que se noten bien */
+  background: white;
+  padding: 14px 14px 30px; /* más padding abajo = efecto "polaroid" */
+  border-radius: 3px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+}
+
+/* Cada marco rotado hacia un lado distinto, como si estuvieran
+   pegados a mano y no perfectamente alineados */
+.marco-1 {
+  transform: rotate(-5deg);
+}
+
+.marco-2 {
+  transform: rotate(4deg);
+}
+
+.nosotros-foto-placeholder {
+  aspect-ratio: 4 / 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 2px dashed var(--rosa);
+  color: var(--rosa);
+  font-size: 1.6rem;
+  background: var(--rosa-claro);
+}
+
+.nosotros-foto-placeholder p {
+  font-size: 0.85rem;
+}
+
+.nosotros-foto {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+}
+
+/*
+  El "hilo" ahora es un cruce, no una línea recta. ".hilo-cruce" es
+  solo un contenedor invisible (width/height:0) puesto justo en el
+  centro de ".nosotros-fotos" — un punto de referencia para acomodar
+  encima sus 3 hijos (las 2 líneas + el corazón), cada uno con su
+  propio position:absolute.
+*/
+.hilo-cruce {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  z-index: 1;
+}
+
+/*
+  Cada "hilo-linea" es una cajita delgada (una barrita, como antes)
+  pero ahora hay DOS: una nace del lado de la foto 1 y otra del lado
+  de la foto 2. "transform-origin" cambia el "punto fijo" alrededor
+  del cual gira el rotate — lo ponemos en el extremo que SÍ queda en
+  el centro (el cruce), para que la línea gire como abriéndose hacia
+  su foto, no desde la mitad.
+*/
+.hilo-linea {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 46px; /* antes 60px: con el espacio más ancho entre fotos (gap:60px),
+                  un hilo tan largo quedaba escondido debajo de las fotos y
+                  casi no se veía nada en el espacio libre */
+  height: 4px;
+  background: linear-gradient(90deg, #a3122f, #e0245e);
+  border-radius: 2px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+
+.hilo-linea-izq {
+  transform-origin: right center;
+  transform: translate(-100%, -50%) rotate(20deg);
+}
+
+.hilo-linea-der {
+  transform-origin: left center;
+  transform: translate(0, -50%) rotate(-20deg);
+}
+
+/*
+  El corazón: el truco clásico de puro CSS. Es UN cuadrado
+  (".hilo-corazon") rotado -45°, y encima le pegamos DOS círculos
+  (::before y ::after, cada uno un círculo perfecto gracias a
+  border-radius:50%) en su borde superior. El cuadrado rotado forma
+  la "V" de abajo del corazón, y los dos círculos forman los dos
+  "chipotes" de arriba — juntos, el ojo los lee como un corazón.
+  Se dibuja justo encima de donde las dos líneas se cruzan.
+*/
+.hilo-corazon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 28px; /* antes 20px: corazón más grande para que se note junto a
+                  las fotos más grandes */
+  height: 28px;
+  background: linear-gradient(135deg, #ff6b8b, #a3122f);
+  transform: translate(-50%, -35%) rotate(-45deg);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.35);
+}
+
+.hilo-corazon::before,
+.hilo-corazon::after {
+  content: '';
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: inherit;
+}
+
+.hilo-corazon::before {
+  top: -14px;
+  left: 0;
+}
+
+.hilo-corazon::after {
+  top: 0;
+  left: 14px;
+}
+
+/* Fecha de aniversario: una sola línea, centrada, arriba de las
+   tarjetas de cada quien */
+.nosotros-fecha {
+  text-align: center;
+  margin: 0 20px 24px;
+  color: var(--texto);
+}
+
+/*
+  ".nosotros-personas" acomoda las 2 tarjetas (Tú / Ella) una junto a
+  la otra. "flex-wrap: wrap" es la clave para que en celular, cuando
+  ya no caben las dos en la misma fila, la segunda simplemente baje
+  a una fila nueva en vez de aplastarse o desbordarse.
+*/
+.nosotros-personas {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  margin: 0 20px;
+}
+
+.nosotros-card {
+  background: white;
+  border-radius: 4px;
+  padding: 26px 30px; /* un poco más de espacio: ahora hay 4 datos, no 2 */
+  flex: 1 1 250px;
+  max-width: 300px;
+  text-align: left;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+
+.nosotros-nombre {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.2rem;
+  color: var(--rosa);
+  margin: 0 0 6px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--rosa-claro);
+}
+
+.nosotros-dato {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--rosa-claro);
+}
+
+.nosotros-dato:last-child {
+  border-bottom: none;
+}
+
+/*
+  El contador ya NO vive dentro de una tarjeta: es su propio párrafo,
+  centrado (text-align:center) y puesto hasta el final de toda la
+  pestaña, con un margen arriba para separarlo de las tarjetas.
+*/
+.nosotros-contador {
+  text-align: center;
+  margin: 28px 20px 0;
+  font-family: 'Playfair Display', Georgia, serif;
+  color: var(--rosa);
+}
+
+.nosotros-contador span {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--texto);
+}
+
+/* =================================================================
+   RECUERDOS (timeline de fechas importantes)
+   ================================================================= */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 0 20px;
+  text-align: left;
+}
+
+.timeline-item {
+  background: white;
+  border-left: 3px solid var(--dorado);
+  border-radius: 4px;
+  padding: 16px 20px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+}
+
+.timeline-fecha {
+  font-weight: 600;
+  color: var(--rosa);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.timeline-titulo {
+  font-family: 'Playfair Display', Georgia, serif;
+  color: var(--texto);
+  margin: 5px 0;
+  font-size: 1.15rem;
+}
+
+.timeline-desc {
+  opacity: 0.75;
+  font-size: 0.92rem;
+}
+
+/* =================================================================
+   TARJETAS ESTILO "CATEGORÍA DE TIENDA" (foto + badge + etiqueta)
+   Se usan en 2 lugares: el carrete de Inicio y la grilla de Fotos.
+   ================================================================= */
+.categoria-card {
+  text-align: left;
+  cursor: default;
+  /*
+    La transición usa una curva "cubic-bezier" con rebote (en vez de
+    "ease" normal) para que el crecimiento se sienta con más resorte,
+    parecido a las animaciones de Apple.
+  */
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.categoria-imagen {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--rosa-claro);
+  border: 1px solid rgba(0,0,0,0.06);
+  transition: box-shadow 0.4s ease, border-color 0.4s ease;
+}
+
+/*
+  ".efecto-vidrio": un brillo diagonal (como un reflejo en cristal)
+  que vive INVISIBLE (opacity:0) encima de la foto todo el tiempo, y
+  solo se enciende con el hover de abajo. Es lo que le da ese toque
+  "glass" estilo Apple: no es solo que la tarjeta crezca, sino que
+  además brilla como si fuera una superficie pulida.
+*/
+.efecto-vidrio {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none; /* nunca bloquea el clic/hover de lo de abajo */
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0) 30%,
+    rgba(255, 255, 255, 0.35) 48%,
+    rgba(255, 255, 255, 0) 66%
+  );
+  opacity: 0;
+  transform: translateX(-30%);
+  transition: opacity 0.4s ease, transform 0.6s ease;
+}
+
+/*
+  "@media (hover: hover) and (pointer: fine)" solo es verdad en
+  dispositivos con mouse de verdad (computadoras): un celular con
+  pantalla táctil no cumple esta condición, así que este efecto NUNCA
+  se activa ahí y tus fotos se ven exactamente igual en el cel.
+
+  Ahora el "grande" es más notorio (translateY y scale más grandes),
+  se le agrega el giro 3D (rotateX), Y la FOTO de adentro también
+  hace zoom (.categoria-foto scale) al mismo tiempo que su marco —
+  así el crecimiento se ve intencional/parejo en vez de sentirse como
+  que la foto se "corta" dentro de un marco que no la acompaña.
+*/
+@media (hover: hover) and (pointer: fine) {
+  /*
+    IMPORTANTE: antes también escalábamos ".categoria-foto" por
+    separado (además de escalar toda la tarjeta) — eso hacía que la
+    foto creciera MÁS que su propio marco, y como el marco tiene
+    overflow:hidden, la parte de foto "de más" se recortaba contra el
+    borde. Ahora solo escalamos LA TARJETA COMPLETA (marco + foto +
+    etiqueta, todo junto, como una sola foto impresa) — así crece
+    proporcional, sin que nada se salga de su propio marco.
+  */
+  .categoria-card:hover {
+    transform: translateY(-10px) scale(1.35);
+    z-index: 5; /* para que "tape" a sus vecinas en vez de quedar detrás */
+    position: relative;
+  }
+
+  .categoria-card:hover .categoria-imagen {
+    border-color: rgba(255, 255, 255, 0.5);
+  }
+
+  .categoria-card:hover .efecto-vidrio {
+    opacity: 1;
+    transform: translateX(30%);
+  }
+}
+
+.categoria-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 2;
+  background: var(--dorado);
+  color: white;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 5px 10px;
+  border-radius: 3px;
+}
+
+.categoria-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed var(--rosa);
+  color: var(--rosa);
+  font-size: 2rem;
+}
+
+.categoria-foto {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.categoria-label {
+  margin-top: 10px;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.05rem;
+  color: var(--texto);
+}
+
+/* ---- Versión "grilla" (usada en la pestaña Fotos) ---- */
+.categorias-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+  padding: 0 20px;
+  margin-bottom: 10px;
+}
+
+/* ---- Versión "carrete" (usada en Inicio: fotos principales) ---- */
+/*
+  Igual que el carrete de "Más fotos", pero con las tarjetas grandes
+  de categoría en vez de cuadros simples. overflow-x:auto permite
+  deslizar horizontalmente, y scroll-snap hace que "enganche" cada
+  tarjeta al soltar el dedo/mouse, como el carrusel de una tienda.
+*/
+.carrete-categorias {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  /*
+    Antes "padding" arriba era 0. El problema: overflow-x:auto hace
+    que el navegador TAMBIÉN recorte cualquier cosa que se salga por
+    ARRIBA o por los lados de este contenedor (así funciona overflow:
+    si activas el scroll en un eje, el otro eje también "vigila" sus
+    límites). Sin espacio de sobra arriba, la tarjeta al agrandarse
+    se topaba con ese límite invisible y se veía cortada/apagada.
+    Con más padding (arriba, lados y abajo) le damos cuarto de sobra
+    para que el "salto" se vea completo.
+  */
+  padding: 34px 20px 26px;
+  scroll-snap-type: x mandatory;
+}
+
+.carrete-categorias .categoria-card {
+  flex: 0 0 190px;   /* ancho fijo de cada tarjeta, no se encoge */
+  scroll-snap-align: start;
+}
+
+/* El carrete simple de "Más fotos" en la pestaña Fotos */
+.carrete {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 0 20px 10px;
+  scroll-snap-type: x mandatory;
+}
+
+.foto-placeholder {
+  aspect-ratio: 1 / 1;
+  background: var(--rosa-claro);
+  border: 2px dashed var(--rosa);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--rosa);
+  font-size: 1.6rem;
+}
+
+.carrete .foto-placeholder {
+  min-width: 110px;
+  width: 110px;
+  flex-shrink: 0;
+  scroll-snap-align: start;
+}
+
+.foto-real {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+/* =================================================================
+   VIDEOS
+   ================================================================= */
+/*
+  Antes las flechas ocupaban su propio espacio DENTRO de la fila
+  (display:flex con las flechas como hijos), y eso les quitaba ancho
+  a los videos. Ahora ".videos-carrusel" ya no es un flex: es un
+  "position:relative" simple, y las flechas se posicionan ENCIMA de
+  los bordes izquierdo/derecho (position:absolute, ver ".video-flecha"
+  más abajo) — así ".videos-ventana" puede usar casi TODO el ancho
+  disponible y los videos se ven más grandes.
+
+  El fondo ya no es un morado "bonito" plano: es más oscuro (como un
+  cuarto de proyección) y le dejamos espacio extra a los lados
+  (padding izquierdo/derecho más grande) para las tiras de
+  "perforaciones" que lo hacen ver como un rollo de película viejo de
+  verdad — ver ".pelicula-perf" más abajo.
+*/
+.videos-carrusel {
+  position: relative;
+  padding: 40px 48px 46px;
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 230, 190, 0.12) 0%, rgba(255, 230, 190, 0) 55%),
+    linear-gradient(180deg, #120b16 0%, #241522 55%, #1a0f1c 100%);
+}
+
+/*
+  La textura de "rayones" de un rollo viejo: puras líneas diagonales
+  blancas casi invisibles (opacity muy baja), repetidas con
+  "repeating-linear-gradient". No es una foto ni una textura
+  descargada — son solo líneas de CSS.
+*/
+.videos-carrusel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit; /* para que sus esquinas sigan la misma curva que el panel */
+  background: repeating-linear-gradient(
+    115deg,
+    rgba(255, 255, 255, 0.045) 0px,
+    rgba(255, 255, 255, 0.045) 1px,
+    transparent 1px,
+    transparent 7px
+  );
+  pointer-events: none;
+}
+
+/*
+  Las 2 tiras de "agujeritos": una franja delgada y oscura a cada
+  lado, con rectángulos claros repetidos (repeating-linear-gradient
+  vertical) que imitan las perforaciones de una tira de cine real.
+*/
+.pelicula-perf {
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  width: 22px;
+  border-radius: 5px;
+  background-color: #0d0710;
+  background-image: repeating-linear-gradient(
+    180deg,
+    #d8c9a8 0px,
+    #d8c9a8 9px,
+    transparent 9px,
+    transparent 23px
+  );
+}
+
+.pelicula-perf-izq {
+  left: 12px;
+}
+
+.pelicula-perf-der {
+  right: 12px;
+}
+
+/*
+  ".videos-ventana" es la "mirilla": recorta (overflow:hidden) todo lo
+  que se sale de su ancho. Adentro, ".videos-pista" es la fila LARGA
+  con los 6 videos uno tras otro; script.js la mueve hacia la
+  izquierda con "transform: translateX(...)" cada vez que le das a
+  una flecha, y como solo se ve lo que cabe dentro de la mirilla, el
+  resto queda "oculto" a los lados hasta que le toque su turno.
+*/
+.videos-ventana {
+  position: relative;
+  overflow: hidden;
+  padding: 0 8px;
+}
+
+.videos-pista {
+  display: flex;
+  align-items: flex-start; /* si no, "stretch" (el default) forzaría a todos los videos a la misma altura, deformando su aspect-ratio real */
+  gap: 24px;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/*
+  Aquí está el truco de "2 en compu, 1 en celular": por default (y en
+  celular) cada tarjeta mide el 100% del ancho de la mirilla -> se ve
+  UNA sola a la vez. En pantallas más anchas (ver el "@media" al
+  fondo del archivo), cada tarjeta mide la MITAD -> se ven 2 al mismo
+  tiempo. Es el mismo HTML y el mismo JS los dos casos, solo cambia
+  este número.
+*/
+.video-card {
+  position: relative;
+  flex: 0 0 100%;
+  min-width: 0;
+}
+
+/*
+  ".video-marco" es quien de verdad se agranda/achica — así el video
+  crece como una pieza rígida, igual que con ".categoria-card".
+
+  Antes tenía "aspect-ratio: 16/9" fijo (proporción de pantalla ancha,
+  tipo YouTube). El problema: tus videos son verticales (grabados con
+  el celular en modo retrato), así que meterlos en un cuadro
+  horizontal obligaba a "object-fit: cover" a recortar los lados para
+  rellenar ese hueco — por eso se veían tan acercados/cortados.
+
+  Ahora el aspect-ratio de cada tarjeta lo calcula script.js con las
+  medidas REALES de cada video en cuanto termina de leer sus datos
+  (evento "loadedmetadata" — ver la función
+  "ajustarMarcoAlVideo()"), así que cada cuadro termina con la forma
+  EXACTA de su video: nada se recorta y nada se deforma. Mientras eso
+  carga, dejamos 9/16 (vertical) como valor por default, ya que es lo
+  más parecido a lo que de verdad vas a mostrar.
+*/
+.video-marco {
+  position: relative;
+  aspect-ratio: 9 / 16;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  cursor: pointer;
+  background: #000; /* si por lo que sea el video no llena el cuadro exacto, se ve como una franja negra de cine, no como un color raro */
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+              opacity 0.4s ease,
+              filter 0.4s ease,
+              box-shadow 0.4s ease,
+              border-color 0.4s ease,
+              aspect-ratio 0.3s ease;
+}
+
+.video-marco video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  /*
+    "object-fit: contain" (antes "cover") es la otra mitad del
+    arreglo: en vez de agrandar el video hasta rellenar todo el
+    cuadro (recortando lo que sobre), lo encoge o agranda para que
+    quepa COMPLETO adentro, sin cortar nada.
+  */
+  object-fit: contain;
+}
+
+/*
+  El video que se está reproduciendo: un borde y sombra más marcados,
+  para que se note cuál es el activo. (Antes también lo agrandábamos
+  con "scale", como a las fotos destacadas — pero aquí adentro de la
+  "mirilla" que recorta los bordes, agrandarlo lo cortaba contra la
+  ventana, así que ese agrandado se quitó y se dejó solo el brillo del
+  borde). Tampoco tiene ya el brillo de "efecto-vidrio" de las fotos:
+  encima de un video en movimiento se veía como un reflejo raro, así
+  que se quitó por completo (ni en el HTML ni aquí).
+*/
+.video-card.activo .video-marco {
+  border-color: rgba(255, 255, 255, 0.55);
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.3);
+}
+
+/*
+  Cuando HAY un video reproduciéndose (".videos-carrusel.reproduciendo"),
+  todos los DEMÁS se apagan: bajan de opacidad y se encogen un poquito,
+  para que toda la atención se vaya al que se está viendo — el
+  ":not(.activo)" es la clave de todo este truco.
+*/
+.videos-carrusel.reproduciendo .video-card:not(.activo) .video-marco {
+  opacity: 0.32;
+  transform: scale(0.94);
+  filter: saturate(0.7);
+}
+
+/*
+  Las flechas: círculos simples, con la flecha como texto (‹ y ›) en
+  vez de un ícono/imagen — así no dependemos de ningún archivo extra.
+  Ahora van "position:absolute" ENCIMA del borde izquierdo/derecho de
+  ".videos-carrusel" (no dentro de la fila, como antes) — eso es lo
+  que le devuelve todo ese ancho de sobra a los videos.
+  ":disabled" (cuando ya no hay a dónde avanzar/retroceder) las deja
+  bien apagaditas para que se entienda que ese lado ya se acabó.
+*/
+.video-flecha {
+  position: absolute;
+  top: 50%;
+  z-index: 6;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: none;
+  background: white;
+  color: var(--rosa);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  transform: translateY(-50%);
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.video-flecha-izq {
+  left: 6px;
+}
+
+.video-flecha-der {
+  right: 6px;
+}
+
+.video-flecha:hover {
+  transform: translateY(-50%) scale(1.08);
+}
+
+.video-flecha:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.video-flecha:disabled:hover {
+  transform: translateY(-50%);
+}
+
+/*
+  La "cinta de película": una franja hecha con un degradado que se
+  repite (repeating-linear-gradient), simulando los cuadritos
+  perforados de una tira de cine real. Es 100% CSS, cero imágenes.
+*/
+.videos-cinta {
+  height: 14px;
+  max-width: 360px;
+  margin: 30px auto 4px;
+  border-radius: 3px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--vino) 0px,
+    var(--vino) 14px,
+    var(--rosa-claro) 14px,
+    var(--rosa-claro) 24px
+  );
+  opacity: 0.55;
+}
+
+/* La frase de abajo usa la misma clase ".slogan" que la de Fotos,
+   pero aquí necesitamos el espacio ARRIBA en vez de abajo. */
+.videos-slogan {
+  margin-top: 12px;
+  margin-bottom: 0;
+}
+
+/*
+  Por default (celular incluido) cada ".video-card" mide el 100% de
+  la mirilla -> se ve UN video a la vez, tal cual pediste. A partir de
+  601px de ancho (tablet/compu) cada uno pasa a medir la mitad, así
+  que ya caben 2 uno junto al otro sin apretarse.
+
+  "calc(50% - 12px)": el 12px es la MITAD del "gap" de 24px entre
+  tarjetas — hay que restarlo para que las 2 tarjetas + el espacio
+  entre ellas sumen exactamente el 100% del ancho, ni más ni menos.
+*/
+@media (min-width: 601px) {
+  .video-card {
+    flex: 0 0 calc(50% - 12px);
+  }
+}
+
+/* =================================================================
+   CARTAS MISTERIOSAS
+   ================================================================= */
+.cartas-grid {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 0 20px;
+}
+
+.sobre {
+  font-size: 2.5rem;
+  background: white;
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 6px;
+  width: 80px;
+  height: 70px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  transition: transform 0.2s ease;
+}
+
+.sobre:hover {
+  transform: scale(1.08) rotate(-3deg);
+}
+
+.sobre.abierto {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.sobre.abierto:hover {
+  transform: none;
+}
+
+.carta-revelada {
+  margin: 25px 20px 0;
+  background: white;
+  border-radius: 6px;
+  padding: 26px;
+  max-width: 420px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.1);
+}
+
+.carta-revelada p {
+  font-size: 1.1rem;
+  margin-bottom: 15px;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+}
+
+.oculto {
+  display: none;
+}
+
+/* =================================================================
+   PREGUNTAS
+   ================================================================= */
+.pregunta-card {
+  background: white;
+  border-radius: 6px;
+  padding: 22px;
+  margin: 0 20px 20px;
+  text-align: left;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+}
+
+.pregunta-card p.enunciado {
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--texto);
+}
+
+.opciones {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.opcion-btn {
+  background: var(--crema);
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 4px;
+  padding: 10px 14px;
+  text-align: left;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.opcion-btn:hover {
+  border-color: var(--dorado);
+}
+
+.opcion-btn.correcta {
+  background: #dcefd8;
+  border-color: transparent;
+}
+
+.opcion-btn.incorrecta {
+  background: #f3dcdc;
+  border-color: transparent;
+}
+
+.sorpresa-desbloqueada {
+  margin-top: 12px;
+  padding: 12px;
+  background: var(--rosa-claro);
+  border-radius: 4px;
+  font-style: italic;
+}
+
+/* =================================================================
+   PREMIOS
+   ================================================================= */
+.boton-principal {
+  background: var(--vino);
+  color: white;
+  border: none;
+  padding: 14px 30px;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.boton-principal:hover {
+  background: var(--rosa);
+}
+
+.premio {
+  margin-top: 25px;
+  padding: 0 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.premio-borde {
+  border: 2px dashed var(--dorado);
+  border-radius: 6px;
+  padding: 26px 35px;
+  background: #fffbf0;
+  max-width: 380px;
+}
+
+.premio-titulo {
+  font-family: 'Playfair Display', Georgia, serif;
+  color: var(--texto);
+  margin-bottom: 8px;
+}
+
+.premio-texto {
+  font-size: 1.05rem;
+}
+
+/* =================================================================
+   FOOTER
+   ================================================================= */
+/*
+  Antes el footer era solo una línea de texto muy chica y muy
+  transparente (opacity:0.5), flotando sola en medio de un montón de
+  espacio en blanco. Ahora tiene un degradado suave detrás (que nace
+  transparente y termina en rosa clarito) para que se sienta como el
+  cierre intencional de la página, no un accidente.
+*/
+.footer {
+  text-align: center;
+  margin-top: 70px;
+  padding: 30px 20px 40px;
+  background: linear-gradient(180deg, transparent 0%, var(--rosa-claro) 100%);
+}
+
+.footer p {
+  opacity: 0.6;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+/* Los 3 corazones de arriba, como un separador chiquito */
+.footer-corazones {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  color: var(--rosa);
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
+
+/* Cada corazón "late" a un ritmo un poquito distinto (animation-delay
+   diferente), para que no se vean los 3 moviéndose exactamente igual
+   al mismo tiempo — se siente más vivo, menos repetitivo. */
+.footer-corazones span {
+  display: inline-block;
+  animation: latido 1.6s ease-in-out infinite;
+}
+
+.footer-corazones span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.footer-corazones span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes latido {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.3);
+  }
+}
+
+/* =================================================================
+   RESPONSIVE
+   ================================================================= */
+@media (max-width: 700px) {
+  .btn-menu-movil {
+    display: block;
+  }
+
+  .brand-logo {
+    height: 32px;
+    top: 6px;
+    left: 10px;
+  }
+
+  .brand {
+    margin-left: 44px;
+  }
+
+  /* La barra es más bajita en celular (logo más chico), así que
+     reducimos el espacio reservado y lo que el hero recupera. */
+  #main-content {
+    padding-top: 64px;
+  }
+
+  .navbar-tabs {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    align-items: flex-start;
+    gap: 4px;
+    padding-top: 10px;
+  }
+
+  .navbar-tabs.abierto {
+    display: flex;
+  }
+
+  .navbar-inner {
+    flex-wrap: wrap;
+  }
+
+  /*
+    El aspect-ratio de 21/9 está pensado para pantallas anchas: en un
+    celular angosto esa proporción da una caja MUY bajita, y el texto
+    (título + fecha + subtítulo + botón) ya no cabe adentro -> se
+    corta, porque .hero tiene overflow:hidden.
+
+    La solución: en celular quitamos el aspect-ratio y en su lugar le
+    damos una altura mínima fija, suficiente para que quepa TODO el
+    texto sin cortarse. Las fotos de fondo (position:absolute,
+    inset:0) siguen llenando toda esa altura sin deformarse gracias a
+    object-fit:cover, así que se ven igual de bien.
+  */
+  .hero {
+    aspect-ratio: auto;
+    min-height: 460px;
+    margin-top: -64px;
+  }
+
+  /*
+    En vez de empujar el texto hasta abajo (flex-end), lo centramos
+    verticalmente (center) igual que en la versión de computadora, y
+    bajamos un poco la altura del hero (460px en vez de 540px) para
+    que no sobre tanta foto vacía arriba y abajo del texto.
+    El degradado ahora es parejo arriba y abajo (no solo abajo) para
+    que el texto se siga leyendo bien esté donde esté la foto.
+  */
+  .hero-texto {
+    /*
+      El problema real: .hero-texto tiene "margin: 0 auto" (para
+      centrarse en pantallas grandes) y NUNCA tenía un "width"
+      explícito, solo "max-width". Sin un width fijo, el navegador
+      calcula el ancho de la caja según su contenido (shrink-to-fit) y
+      como los márgenes son "auto" a los dos lados, la centra en vez
+      de estirarla — por eso se veía como un rectángulo oscuro
+      flotando en medio, en vez de cubrir toda la foto.
+      Con "width: 100%" le decimos que SIEMPRE ocupe el ancho
+      completo, así los márgenes automáticos ya no tienen espacio
+      que repartir y el degradado cubre toda la franja de la foto.
+    */
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    background: linear-gradient(180deg, rgba(43,31,51,0.55) 0%, rgba(43,31,51,0.7) 100%);
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .hero-titulo {
+    font-size: 1.9rem;
+  }
+
+  /*
+    En celular los marcos de 220px ya no caben uno junto al otro (dos
+    de 220px + el gap se pasan del ancho de casi cualquier teléfono),
+    así que los achicamos un poco, reducimos el espacio entre ellos y
+    el "padding" del fondo atardecer (para que no se vea gigante).
+  */
+  .nosotros-fotos {
+    gap: 34px;
+    padding: 30px 14px 40px;
+  }
+
+  .nosotros-foto-marco {
+    flex: 0 0 150px;
+  }
+
+  .hilo-linea {
+    width: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .franja-titulo {
+    font-size: 1.4rem;
+  }
+  .countdown-box {
+    min-width: 62px;
+    padding: 12px 10px;
+  }
+  .countdown-box span {
+    font-size: 1.4rem;
+  }
+
+  /* En celulares muy angostos el subtítulo ocupa más líneas de
+     texto, así que le damos un poco más de altura al hero */
+  .hero {
+    min-height: 500px;
+  }
+
+  /* Subimos un poco los puntitos para que nunca queden pegados al
+     botón "Explorar sorpresas" en pantallas chicas */
+  .hero-dots {
+    bottom: 16px;
+  }
+}

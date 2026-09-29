@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Para el ADMV 💕 - Fotos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="src/style.css" />
+</head>
+<body>
+  <header class="navbar">
+    <img src="src/logo.png" alt="Logo R & D" class="brand-logo" />
+    <div class="navbar-inner">
+      <span class="brand">Para Ti</span>
+      <nav class="navbar-tabs" id="navbar-tabs">
+        <span class="tab-glass-indicador" id="tab-glass-indicador"></span>
+        <a href="index.html" class="tab-btn"><span>Inicio</span></a>
+        <a href="recuerdos.html" class="tab-btn"><span>Recuerdos</span></a>
+        <a href="fotos.html" class="tab-btn activo"><span>Fotos</span></a>
+        <a href="videos.html" class="tab-btn"><span>Videos</span></a>
+        <a href="cartas.html" class="tab-btn"><span>Cartas</span></a>
+        <a href="preguntas.html" class="tab-btn"><span>Preguntas</span></a>
+        <a href="premios.html" class="tab-btn"><span>Premios</span></a>
+        <a href="nosotros.html" class="tab-btn"><span>Nosotros</span></a>
+      </nav>
+      <button id="btn-menu-movil" class="btn-menu-movil" aria-label="Abrir menú">☰</button>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section class="tab-panel activo" data-tab="fotos">
+      <h2>Momentos de diversión :)</h2>
+      <p class="slogan">Cada foto, un pedacito de nosotros</p>
+
+      <p class="subtitulo-seccion">Destacadas</p>
+      <div class="categorias-grid" id="galeria-destacada">
+        <div class="categoria-card">
+          <div class="categoria-imagen">
+            <span class="efecto-vidrio" aria-hidden="true"></span>
+            <span class="categoria-badge">Favorita</span>
+            <img src="src/fotos/diver1.jpg" alt="Descripción" class="categoria-foto" />
+          </div>
+          <p class="categoria-label">30/01/2025</p>
+        </div>
+        <div class="categoria-card">
+          <div class="categoria-imagen">
+            <span class="efecto-vidrio" aria-hidden="true"></span>
+            <span class="categoria-badge">Recuerdo</span>
+            <img src="src/fotos/diver2.jpg" alt="Descripción" class="categoria-foto" />
+          </div>
+          <p class="categoria-label">11/01/2025</p>
+        </div>
+        <div class="categoria-card">
+          <div class="categoria-imagen">
+            <span class="efecto-vidrio" aria-hidden="true"></span>
+            <span class="categoria-badge">Especial</span>
+            <img src="src/fotos/diver3.jpg" alt="Descripción" class="categoria-foto" />
+          </div>
+          <p class="categoria-label">2/02/2026</p>
+        </div>
+      </div>
+
+      <p class="subtitulo-seccion">Más fotos</p>
+      <div class="carrete" id="carrete-fotos">
+        <div class="foto-placeholder"><span>➕</span></div>
+        <div class="foto-placeholder"><span>➕</span></div>
+        <div class="foto-placeholder"><span>➕</span></div>
+        <div class="foto-placeholder"><span>➕</span></div>
+        <div class="foto-placeholder"><span>➕</span></div>
+        <div class="foto-placeholder"><span>➕</span></div>
+        <div class="foto-placeholder"><span>➕</span></div>
+        <div class="foto-placeholder"><span>➕</span></div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-corazones" aria-hidden="true">
+        <span>♥</span><span>♥</span><span>♥</span>
+      </div>
+      <p>Hecho con 💕 para ti</p>
+    </footer>
+  </main>
+
+  <script src="src/JavaScript/fotos.js"></script>
+</body>
+</html>

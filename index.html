@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Para el ADMV 💕</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="src/style.css" />
+</head>
+<body>
+  <section id="intro-screen">
+    <div class="corazones-flotantes" aria-hidden="true">
+      <span class="corazon-decorativo c1">❤️</span>
+      <span class="corazon-decorativo c2">💜</span>
+      <span class="corazon-decorativo c3">❤️</span>
+      <span class="corazon-decorativo c4">💗</span>
+      <span class="corazon-decorativo c5">💜</span>
+      <span class="corazon-decorativo c6">❤️</span>
+      <span class="corazon-decorativo c7">💗</span>
+      <span class="corazon-decorativo c8">❤️</span>
+    </div>
+    <div class="intro-content">
+      <p class="intro-script">Con todo mi amor para ti</p>
+      <p class="intro-pre">Toca para abrir tu sorpresa</p>
+      <button id="btn-abrir-intro" aria-label="Abrir sorpresa">💌</button>
+    </div>
+  </section>
+
+  <canvas id="confetti-canvas"></canvas>
+
+  <header class="navbar">
+    <img src="src/logo.png" alt="Logo R & D" class="brand-logo" />
+    <div class="navbar-inner">
+      <span class="brand">Para Ti</span>
+      <nav class="navbar-tabs" id="navbar-tabs">
+        <span class="tab-glass-indicador" id="tab-glass-indicador"></span>
+        <a href="index.html" class="tab-btn activo"><span>Inicio</span></a>
+        <a href="recuerdos.html" class="tab-btn"><span>Recuerdos</span></a>
+        <a href="fotos.html" class="tab-btn"><span>Fotos</span></a>
+        <a href="videos.html" class="tab-btn"><span>Videos</span></a>
+        <a href="cartas.html" class="tab-btn"><span>Cartas</span></a>
+        <a href="preguntas.html" class="tab-btn"><span>Preguntas</span></a>
+        <a href="premios.html" class="tab-btn"><span>Premios</span></a>
+        <a href="nosotros.html" class="tab-btn"><span>Nosotros</span></a>
+      </nav>
+      <button id="btn-menu-movil" class="btn-menu-movil" aria-label="Abrir menú">☰</button>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section class="tab-panel activo" data-tab="inicio">
+      <div class="hero">
+        <div class="hero-slides" id="hero-slides">
+          <div class="hero-slide activo">
+            <img src="src/fotos/portada1.jpg" alt="Descripción" class="hero-foto" />
+          </div>
+          <div class="hero-slide">
+            <img src="src/fotos/portada2.jpg" alt="Descripción" class="hero-foto" />
+          </div>
+          <div class="hero-slide">
+            <img src="src/fotos/portada3.jpg" alt="Descripción" class="hero-foto" />
+          </div>
+        </div>
+        <div class="hero-texto">
+          <p class="hero-caption">Nuestro aniversario</p>
+          <h1 class="hero-titulo">Dos años<br />juntos amor</h1>
+          <p class="hero-fecha-italic">6 de diciembre</p>
+          <p class="hero-subtitulo">Un vistazo a todo lo que hemos vivido y todo lo que somos.</p>
+          <button class="hero-boton" id="btn-hero-explorar">Explorar sorpresas</button>
+        </div>
+        <div class="hero-dots" id="hero-dots">
+          <button class="hero-dot activo" aria-label="Foto 1"></button>
+          <button class="hero-dot" aria-label="Foto 2"></button>
+          <button class="hero-dot" aria-label="Foto 3"></button>
+        </div>
+      </div>
+
+      <p class="subtitulo-seccion">Nuestros mejores momentos</p>
+      <div class="carrete-categorias" id="carrete-categorias">
+        <div class="categoria-card">
+          <div class="categoria-imagen">
+            <span class="efecto-vidrio" aria-hidden="true"></span>
+            <span class="categoria-badge">Favorita</span>
+            <img src="src/fotos/destacada1.jpg" alt="Descripción" class="categoria-foto" />
+          </div>
+          <p class="categoria-label">22/07/2025</p>
+        </div>
+        <div class="categoria-card">
+          <div class="categoria-imagen">
+            <span class="efecto-vidrio" aria-hidden="true"></span>
+            <span class="categoria-badge">Recuerdo</span>
+            <img src="src/fotos/destacada2.jpg" alt="Descripción" class="categoria-foto" />
+          </div>
+          <p class="categoria-label">18/05/2025</p>
+        </div>
+        <div class="categoria-card">
+          <div class="categoria-imagen">
+            <span class="efecto-vidrio" aria-hidden="true"></span>
+            <span class="categoria-badge">Especial</span>
+            <img src="src/fotos/destacada3.jpg" alt="Descripción" class="categoria-foto" />
+          </div>
+          <p class="categoria-label">16/02/2025</p>
+        </div>
+        <div class="categoria-card">
+          <div class="categoria-imagen">
+            <span class="efecto-vidrio" aria-hidden="true"></span>
+            <span class="categoria-badge">Favorita</span>
+            <img src="src/fotos/destacada4.jpg" alt="Descripción" class="categoria-foto" />
+          </div>
+          <p class="categoria-label">12/01/2026</p>
+        </div>
+        <div class="categoria-card">
+          <div class="categoria-imagen">
+            <span class="efecto-vidrio" aria-hidden="true"></span>
+            <span class="categoria-badge">Recuerdo</span>
+            <img src="src/fotos/destacada5.jpg" alt="Descripción" class="categoria-foto" />
+          </div>
+          <p class="categoria-label">25/12/2026</p>
+        </div>
+      </div>
+
+      <div class="espacio-libre" id="espacio-libre"></div>
+
+      <section class="franja-oscura">
+        <div class="franja-oscura-inner">
+          <p class="franja-caption">Cuenta regresiva</p>
+          <h2 class="franja-titulo">Nos vemos en...</h2>
+          <p class="franja-fecha">4 de febrero, 2027 💫</p>
+          <div class="countdown-grid">
+            <div class="countdown-box"><span id="cd-dias">00</span><small>días</small></div>
+            <div class="countdown-box"><span id="cd-horas">00</span><small>horas</small></div>
+            <div class="countdown-box"><span id="cd-min">00</span><small>min</small></div>
+            <div class="countdown-box"><span id="cd-seg">00</span><small>seg</small></div>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-corazones" aria-hidden="true">
+        <span>♥</span><span>♥</span><span>♥</span>
+      </div>
+      <p>Hecho con 💕 para ti</p>
+    </footer>
+  </main>
+
+  <script src="src/JavaScript/inicio.js"></script>
+</body>
+</html>
