@@ -1,41 +1,6 @@
 /* =================================================================
    LÓGICA: RECUERDOS (recuerdos.html)
    ================================================================= */
-const timelineContenedor = document.getElementById('timeline-recuerdos');
-if (timelineContenedor) {
-  const fechasImportantes = [
-  {
-    fecha: '6 de diciembre',
-    titulo: 'Nuestro aniversario',
-    descripcion: 'El día que cumplimos un año más juntos'
-  },
-  {
-    fecha: '4 de febrero, 2027',
-    titulo: 'Nos volvemos a ver',
-    descripcion: 'El día que se acaba la distancia (por un rato)'
-  },
-  {
-    fecha: '14 de febrero',
-    titulo: 'San Valentín',
-    descripcion: 'Agrega aquí tu propio recuerdo de este día'
-  }
-];
-
-const timelineContenedor = document.getElementById('timeline-recuerdos');
-
-fechasImportantes.forEach((item) => {
-  const tarjeta = document.createElement('div');
-  tarjeta.className = 'timeline-item';
-
-  tarjeta.innerHTML = `
-    <p class="timeline-fecha">${item.fecha}</p>
-    <p class="timeline-titulo">${item.titulo}</p>
-    <p class="timeline-desc">${item.descripcion}</p>
-  `;
-
-  timelineContenedor.appendChild(tarjeta);
-});
-}
 
 // Control del Menú Hamburguesa en Dispositivos Móviles
 const btnMenuMovil = document.getElementById('btn-menu-movil');
@@ -46,3 +11,28 @@ if (btnMenuMovil && navbarTabs) {
     navbarTabs.classList.toggle('abierto');
   });
 }
+
+// Control para desplegar los eventos por año (Modo Acordeon: cierra los demás al abrir uno)
+const tarjetasAno = document.querySelectorAll('.ano-card');
+
+tarjetasAno.forEach(card => {
+  card.addEventListener('click', () => {
+    const eventosActuales = card.querySelector('.eventos-ano');
+    const yaEstaAbierto = card.classList.contains('abierto');
+
+    // 1. Cerramos y ocultamos TODAS las tarjetas primero
+    tarjetasAno.forEach(otraCard => {
+      otraCard.classList.remove('abierto');
+      const otrosEventos = otraCard.querySelector('.eventos-ano');
+      if (otrosEventos) {
+        otrosEventos.classList.add('oculto');
+      }
+    });
+
+    // 2. Si la tarjeta que tocó el usuario NO estaba abierta, la abrimos
+    if (!yaEstaAbierto && eventosActuales) {
+      eventosActuales.classList.remove('oculto');
+      card.classList.add('abierto');
+    }
+  });
+});
