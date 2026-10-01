@@ -2102,3 +2102,123 @@ h1, h2, .hero-titulo, .franja-titulo {
   opacity: 0.55;          /* Se difuminan más para que el año abierto destaque por completo */
   filter: blur(0.5px);
 }
+
+
+/* Bloqueo de tarjetas en celular cuando una ya está abierta */
+@media (max-width: 768px) {
+  #anos-contenedor.bloquear-fondo .ano-card:not(.abierto) {
+    pointer-events: none; /* Desactiva cualquier clic en las tarjetas cerradas */
+    opacity: 0.4;         /* Las desvanece fuertemente para indicar que están bloqueadas */
+    filter: blur(1px);
+    transition: opacity 0.3s ease, filter 0.3s ease;
+  }
+}
+
+/* =================================================================
+   ANIMACIÓN 3D ANCLADA DESDE ARRIBA (Sin expandirse hacia el título)
+   ================================================================= */
+
+/* 1. Indicamos que el punto de apoyo/origen de la tarjeta sea su borde superior (top-center).
+      Así, cuando crezca con el zoom, TODO su crecimiento se proyecte hacia abajo y al frente, 
+      jamás hacia arriba. */
+.ano-card {
+  transform-origin: top center;
+  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.45s ease,
+              opacity 0.45s ease;
+  transform-style: preserve-3d;
+}
+
+/* 2. Cuando la tarjeta ESTÁ ABIERTA:
+   - Se queda anclada exactamente en la línea del botón del año (translateY(0)).
+   - Hace su efecto 3D llamativo pero respetando completamente el espacio superior. */
+.ano-card.abierto {
+  transform: translateY(0) scale(1.08) translateZ(30px);
+  box-shadow: 0 30px 60px rgba(43, 31, 51, 0.25);
+  z-index: 100;
+  position: relative;
+  border-top-color: var(--vino);
+}
+
+/* Las tarjetas vecinas se hacen un poco más chicas y se desvanecen */
+.anos-grid:has(.ano-card.abierto) .ano-card:not(.abierto) {
+  transform: scale(0.92);
+  opacity: 0.5;
+  filter: blur(0.5px);
+}
+
+/* =================================================================
+   SEPARACIÓN DEL FOOTER PARA EVITAR QUE SE ENCIEME EN RECUERDOS
+   ================================================================= */
+
+.tab-panel[data-tab="recuerdos"] {
+  overflow: visible !important;
+  padding-bottom: 330px !important;
+}
+
+.footer {
+  position: relative !important;
+  z-index: 1 !important;
+  margin-top: 140px !important;
+  clear: both !important;
+}
+
+
+.frase-fondo-centro p {
+  font-family: 'Great Vibes', 'Parisienne', 'Georgia', serif; /* Tipografía cursiva romántica */
+  font-size: 1.5rem;
+  font-style: italic;
+  line-height: 1.6;
+  color: var(--texto-oscuro, #4a3b4c);
+  margin: 6px 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+}
+
+.corazones-frase {
+  color: var(--vino, #b0657b);
+  font-size: 1.1rem;
+  letter-spacing: 6px;
+  margin-bottom: 8px;
+}
+
+/* =================================================================
+   CORRECCIÓN DEFINITIVA DE CAPAS (Z-INDEX)
+   ================================================================= */
+
+/* 1. Aseguramos que la sección de recuerdos sea el contenedor general */
+.tab-panel[data-tab="recuerdos"] {
+  position: relative;
+  min-height: 85vh;
+  padding-bottom: 150px;
+  isolation: isolate; /* Crea un nuevo mundo de capas para que no se peleen con el resto */
+}
+
+/* 2. La frase se queda firmemente en la capa 1 (atrás) */
+.frase-fondo-centro {
+  position: absolute;
+  top: 58%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 600px;
+  text-align: center;
+  z-index: 1 !important;
+  pointer-events: none;
+  opacity: 0.75;
+}
+
+/* 3. El contenedor de los años y sus tarjetas abiertas suben a la capa 50 (adelante) */
+.anos-grid {
+  position: relative;
+  z-index: 50 !important;
+}
+
+.ano-card.abierto {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  transform: translateY(0) scale(1.08) translateZ(30px);
+  box-shadow: 0 30px 60px rgba(43, 31, 51, 0.3);
+  z-index: 100 !important; /* Pasa por encima de la frase por completo */
+  position: relative;
+  border-top-color: var(--vino);
+}
