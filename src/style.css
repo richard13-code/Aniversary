@@ -2222,3 +2222,27 @@ h1, h2, .hero-titulo, .franja-titulo {
   position: relative;
   border-top-color: var(--vino);
 }
+
+/* =================================================================
+   ADAPTACIÓN RESPONSIVE DE LA FRASE PARA CELULARES
+   ================================================================= */
+
+@media (max-width: 768px) {
+  /* En celulares quitamos la posición absoluta para que fluya de manera normal abajo de las tarjetas */
+  .frase-fondo-centro {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    transform: none !important;
+    margin: 60px auto 40px auto !important; /* Espacio limpio debajo de la última tarjeta */
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 20px;
+    opacity: 0.9;
+  }
+
+  /* Ajustamos un poquito el tamaño de letra para que luzca bien en pantallas pequeñas */
+  .frase-fondo-centro p {
+    font-size: 1.25rem !important;
+  }
+}
