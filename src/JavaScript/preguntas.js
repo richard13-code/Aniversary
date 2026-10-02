@@ -5,22 +5,52 @@ const preguntasContenedor = document.getElementById('preguntas-contenedor');
 if (preguntasContenedor) {
   const preguntas = [
     {
-      enunciado: '¿En qué mes nos conocimos?',
-      opciones: ['Diciembre', 'Marzo', 'Julio'],
+      enunciado: '¿Cuándo es nuestro aniversario?',
+      opciones: ['6 de cada mes', '13 de cada mes', '22 de cada mes'],
       correcta: 0,
-      sorpresa: '¡Correcto! 🎉 Ese mes cambió todo para mí.'
-    },
-    {
-      enunciado: '¿Cuál es nuestra canción?',
-      opciones: ['Opción A', 'Opción B', 'Opción C'],
-      correcta: 1,
-      sorpresa: '¡Sí! Cada vez que la escucho pienso en ti.'
+      sorpresa: '¡Correcto! 🎉 De los dias mas especial a tu lado.'
     },
     {
       enunciado: '¿Cuántos años cumplimos este 6 de diciembre?',
       opciones: ['1 año', '2 años', '3 años'],
       correcta: 1,
       sorpresa: '2 años y quiero muchísimos más contigo 💕'
+    },
+    {
+      enunciado: '¿Cuál es mi comida favorita?',
+      opciones: ['Chilaquiles', 'Tacos', 'Pozole'],
+      correcta: 2,
+      sorpresa: '¡Correcto! 😋 Pero siempre elegiré comerte a ti.'
+    },
+    {
+      enunciado: '¿A dónde salimos a festejar mi primer cumpleaños como novios?',
+      opciones: ['Hasbro City', 'Maquinas de juegos', 'Balneario'],
+      correcta: 0,
+      sorpresa: '¡Correcto! 🎉 Ese día fue el comienzo de nuestras aventuras juntos.'
+    },
+    {
+      enunciado: '¿Cuál es mi película favorita?',
+      opciones: ['Star Wars', 'Transformers', 'Avengers'],
+      correcta: 1,
+      sorpresa: '¡Correcto! 🎬 Siempre me emociona ver esa película.'
+    },
+    {
+      enunciado: '¿Cuál es mi jugador favorito?',
+      opciones: ['LeBron James','Michael Jordan', 'Stephen Curry', 'Kevin Durant'],
+      correcta: 2,
+      sorpresa: '¡Correcto! 🏀 Pero ni sus tiros son tan perfectos como tú.'
+    },
+    {
+      enunciado: '¿Nos vamos a casar?',
+      opciones: ['Sí', 'No'],
+      correcta: 0,
+      sorpresa: '¡Correcto! 🎉 Mas te vale amor.'
+    },
+    {
+      enunciado: '¿Te vas a aburrir de mi o me vas a cambiar por otro?',
+      opciones: ['Sí', 'No'],
+      correcta: 1,
+      sorpresa: '¡Correcto! 🎉 Me vas aguantar toda la vida ehh.'
     }
   ];
 
@@ -56,7 +86,7 @@ if (preguntasContenedor) {
           btn.classList.add('incorrecta');
           todosLosBotones[preg.correcta].classList.add('correcta');
           sorpresaDiv.classList.remove('oculto');
-          sorpresaDiv.textContent = 'No era esa, pero te la regalo igual: ' + preg.sorpresa;
+          sorpresaDiv.textContent = 'Nono 😑, intenta de nuevo ehh.';
         }
       });
 

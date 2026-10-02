@@ -1507,57 +1507,153 @@ h1, h2, .hero-titulo, .franja-titulo {
 }
 
 /* =================================================================
-   CARTAS MISTERIOSAS
+   CARTAS MISTERIOSAS - DISEÑO MÁGICO Y ROMÁNTICO PROFUNDO
    ================================================================= */
+
+/* Fondo general de la sección con un degradado íntimo y siluetas de corazones tenues */
+.tab-panel[data-tab="cartas"] {
+  position: relative;
+  min-height: 85vh;
+  padding-bottom: 100px;
+  background: 
+    radial-gradient(circle at 50% 30%, rgba(179, 18, 63, 0.12) 0%, rgba(91, 20, 101, 0.08) 65%, transparent 100%),
+    /* Siluetas de corazones repetidas suavemente en el fondo con SVG puro en CSS */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='36' height='36' fill='rgba(216, 143, 160, 0.15)'%3E%3Cpath d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 120px 120px; /* Distancia entre las siluetas de corazones */
+}
+
+.tab-panel[data-tab="cartas"] h2 {
+  color: var(--vino);
+  text-shadow: 0 2px 4px rgba(43, 31, 51, 0.05);
+}
+
 .cartas-grid {
   display: flex;
   justify-content: center;
-  gap: 16px;
+  gap: 20px;
   flex-wrap: wrap;
-  padding: 0 20px;
+  padding: 25px 20px;
+  max-width: 700px;
+  margin: 0 auto;
 }
 
+/* Sobre con estilo de carta de amor clásica y elegante */
 .sobre {
-  font-size: 2.5rem;
-  background: white;
-  border: 1px solid rgba(0,0,0,0.06);
-  border-radius: 6px;
-  width: 80px;
-  height: 70px;
+  position: relative;
+  font-size: 2.3rem;
+  background: linear-gradient(145deg, #ffffff 0%, #f9ecef 100%);
+  border: 2px solid rgba(216, 143, 160, 0.5);
+  border-radius: 14px;
+  width: 90px;
+  height: 80px;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
-  transition: transform 0.2s ease;
+  box-shadow: 0 10px 25px rgba(43, 31, 51, 0.1);
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .sobre:hover {
-  transform: scale(1.08) rotate(-3deg);
+  transform: translateY(-6px) scale(1.1);
+  border-color: var(--dorado);
+  box-shadow: 0 15px 30px rgba(201, 162, 75, 0.25);
+  background: linear-gradient(145deg, #ffffff 0%, #f3dbe1 100%);
 }
 
 .sobre.abierto {
-  opacity: 0.4;
-  cursor: default;
+  background: linear-gradient(145deg, #f3dbe1 0%, #e8c5ce 100%);
+  border-color: var(--dorado);
+  opacity: 0.9;
+  transform: scale(0.96);
+  box-shadow: 0 4px 12px rgba(43, 31, 51, 0.08);
 }
 
-.sobre.abierto:hover {
-  transform: none;
+/* Efecto de brillos mágicos flotantes al abrir un sobre */
+@keyframes brilloMagico {
+  0% {
+    transform: scale(0.3) translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.4) translateY(-60px) rotate(15deg);
+    opacity: 0;
+  }
 }
 
+.particula-brillo {
+  position: absolute;
+  pointer-events: none;
+  font-size: 1.1rem;
+  animation: brilloMagico 0.85s ease-out forwards;
+  z-index: 20;
+}
+
+/* =================================================================
+   CARTA REVELADA: Fondo entre rojo, morado, rosa y corazones
+   ================================================================= */
 .carta-revelada {
-  margin: 25px 20px 0;
-  background: white;
-  border-radius: 6px;
-  padding: 26px;
-  max-width: 420px;
-  margin-left: auto;
-  margin-right: auto;
-  box-shadow: 0 6px 24px rgba(0,0,0,0.1);
+  position: relative;
+  margin: 40px auto 0;
+  /* Degradado romántico profundo entre rojo vino, rosa y un toque morado suave */
+  background: linear-gradient(135deg, #7a1c3f 0%, #b3123f 45%, #6a1b5c 100%),
+              url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='28' height='28' fill='rgba(255, 255, 255, 0.08)'%3E%3Cpath d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E");
+  background-blend-mode: overlay;
+  background-size: auto, 80px 80px;
+  border: 2px solid var(--dorado); /* Marco dorado elegante que resalta muchísimo */
+  border-radius: 18px;
+  padding: 40px 32px;
+  max-width: 480px;
+  width: 90%;
+  box-shadow: 0 20px 50px rgba(43, 31, 51, 0.35), 0 0 25px rgba(201, 162, 75, 0.3);
+  animation: aparecerCarta 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  color: white;
+  text-align: center;
+}
+
+@keyframes aparecerCarta {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .carta-revelada p {
-  font-size: 1.1rem;
-  margin-bottom: 15px;
+  font-size: 1.3rem;
+  margin-bottom: 28px;
   font-family: 'Playfair Display', Georgia, serif;
   font-style: italic;
+  color: #fffafc;
+  line-height: 1.6;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Botón de cerrar dentro de la carta */
+#cerrar-carta {
+  background: white;
+  color: var(--vino);
+  border: none;
+  padding: 11px 28px;
+  font-size: 0.8rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+#cerrar-carta:hover {
+  background: var(--dorado);
+  color: white;
+  transform: scale(1.06);
+  box-shadow: 0 6px 20px rgba(201, 162, 75, 0.4);
 }
 
 .oculto {
