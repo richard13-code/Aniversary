@@ -6,14 +6,43 @@
 const introScreen = document.getElementById('intro-screen');
 const btnAbrirIntro = document.getElementById('btn-abrir-intro');
 const canvas = document.getElementById('confetti-canvas');
+const musicaRomantica = document.getElementById('musica-romantica');
+
+// Al cargar la página, verificamos si ya venía sonando de otra pestaña en la misma sesión
+window.addEventListener('DOMContentLoaded', () => {
+  if (musicaRomantica) {
+    const estadoMusica = sessionStorage.getItem('musicaSonando');
+    const tiempoGuardado = sessionStorage.getItem('tiempoMusica');
+
+    if (estadoMusica === 'true' && tiempoGuardado) {
+      musicaRomantica.currentTime = parseFloat(tiempoGuardado);
+      musicaRomantica.play().catch(error => {
+        console.log("Audio continuo sincronizado:", error);
+      });
+    }
+  }
+});
+
+// Actualizamos el segundo en curso usando sessionStorage
+if (musicaRomantica) {
+  musicaRomantica.addEventListener('timeupdate', () => {
+    sessionStorage.setItem('tiempoMusica', musicaRomantica.currentTime);
+  });
+}
 
 if (introScreen) {
   if (sessionStorage.getItem('sorpresaAbierta') === 'true') {
-    // Si ya se abrió antes en esta sesión, ocultamos la intro de golpe
     introScreen.style.display = 'none';
   } else if (btnAbrirIntro) {
-    // Si es la primera vez, dejamos que funcione el botón y guardamos la sesión
     btnAbrirIntro.addEventListener('click', () => {
+      
+      if (musicaRomantica) {
+        musicaRomantica.play().catch(error => {
+          console.log("Reproducción automática gestionada por interacción.", error);
+        });
+        sessionStorage.setItem('musicaSonando', 'true');
+      }
+
       introScreen.classList.add('cerrado');
       if (typeof window.lanzarConfeti === 'function') {
         window.lanzarConfeti(150);
@@ -128,7 +157,7 @@ if (heroSlides.length > 0) {
 const btnHeroExplorar = document.getElementById('btn-hero-explorar');
 if (btnHeroExplorar) {
   btnHeroExplorar.addEventListener('click', () => {
-    window.location.href = 'cartas.html';
+    window.location.href = 'recuerdos.html';
   });
 }
 

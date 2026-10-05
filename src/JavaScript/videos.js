@@ -179,3 +179,25 @@ if (btnMenuMovil && navbarTabs) {
     });
   });
 }
+
+const musicaRomantica = document.getElementById('musica-romantica');
+
+window.addEventListener('DOMContentLoaded', () => {
+  if (musicaRomantica) {
+    const estadoMusica = sessionStorage.getItem('musicaSonando');
+    const tiempoGuardado = sessionStorage.getItem('tiempoMusica');
+
+    if (estadoMusica === 'true' && tiempoGuardado) {
+      musicaRomantica.currentTime = parseFloat(tiempoGuardado);
+      musicaRomantica.play().catch(error => {
+        console.log("Audio continuo sincronizado entre pestañas.", error);
+      });
+    }
+  }
+});
+
+if (musicaRomantica) {
+  musicaRomantica.addEventListener('timeupdate', () => {
+    sessionStorage.setItem('tiempoMusica', musicaRomantica.currentTime);
+  });
+}
