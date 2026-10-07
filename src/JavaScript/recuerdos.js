@@ -64,12 +64,11 @@ tarjetasAno.forEach(card => {
 });
 
 
-// CERRAR al hacer clic FUERA de las tarjetas (en cualquier parte del documento)
-document.addEventListener('click', (e) => {
-  // Verificamos si el clic ocurrió FUERA de cualquier .ano-card
-  if (!e.target.closest('.ano-card')) {
-    const habiaAlgunaAbierta = document.querySelector('.ano-card.abierto');
-    
+// Función definitiva para cerrar y asegurar la subida completa
+function cerrarTarjetasYSubir() {
+  const habiaAlgunaAbierta = document.querySelector('.ano-card.abierto');
+  
+  if (tarjetasAno) {
     tarjetasAno.forEach(card => {
       card.classList.remove('abierto');
       const eventos = card.querySelector('.eventos-ano');
@@ -77,38 +76,91 @@ document.addEventListener('click', (e) => {
         eventos.classList.add('oculto');
       }
     });
-    if (contenedorAnos) {
-      contenedorAnos.classList.remove('bloquear-fondo');
-    }
-
-    // Si había una tarjeta abierta y se cerró haciendo clic fuera, sube la página suavemente
-    if (habiaAlgunaAbierta) {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
-    }
   }
-});
+  
+  if (contenedorAnos) {
+    contenedorAnos.classList.remove('bloquear-fondo');
+  }
+
+  // Si había una tarjeta abierta, forzamos la subida con doble seguridad
+  if (habiaAlgunaAbierta) {
+    // Primer intento inmediato
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    // Segundo respaldo por si el navegador estaba ocupado renderizando el cierre
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 100);
+  }
+}
+
+// Escuchador global de clics optimizado
+document.addEventListener('click', (e) => {
+  const cardClickeada = e.target.closest('.ano-card');
+  const cardAbierta = document.querySelector('.ano-card.abierto');
+
+  // Si se hizo clic fuera de cualquier tarjeta
+  const clicFuera = !cardClickeada;
+  
+  // O si ya hay una tarjeta abierta y se hace clic en esa misma tarjeta (en cualquier parte de ella)
+  const clicEnMismaTarjetaAbierta = cardAbierta && cardClickeada === cardAbierta;
+
+  if (clicFuera || clicEnMismaTarjetaAbierta) {
+    e.stopPropagation(); // Evita interferencias con otros scripts o eventos internos
+    cerrarTarjetasYSubir();
+  }
+}, true); // Usamos 'true' (capturing phase) para atrapar el clic antes de que se pierda en los elementos internos de la tarjeta
+
+// Botón "Atrás" SOLO para teléfonos (móviles)
+const esDispositivoMovil = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+
+if (esDispositivoMovil) {
+  window.addEventListener('popstate', (e) => {
+    const tarjetaAbierta = document.querySelector('.ano-card.abierto');
+    if (tarjetaAbierta) {
+      history.pushState(null, null, window.location.href);
+      cerrarTarjetasYSubir();
+    }
+  });
+
+  window.history.pushState(null, null, window.location.href);
+}
 
 const musicaRomantica = document.getElementById('musica-romantica');
 
-window.addEventListener('DOMContentLoaded', () => {
+// 1. Sincronizar y mantener al cambiar de pestaña o usar el botón "Atrás"
+window.addEventListener('pageshow', (event) => {
   if (musicaRomantica) {
     const estadoMusica = sessionStorage.getItem('musicaSonando');
     const tiempoGuardado = sessionStorage.getItem('tiempoMusica');
 
-    if (estadoMusica === 'true' && tiempoGuardado) {
-      musicaRomantica.currentTime = parseFloat(tiempoGuardado);
+    // Si la página se cargó desde la caché del navegador (al presionar "Atrás")
+    if (event.persisted || (estadoMusica === 'true' && tiempoGuardado)) {
+      musicaRomantica.currentTime = parseFloat(tiempoGuardado || 0);
       musicaRomantica.play().catch(error => {
-        console.log("Audio continuo sincronizado entre pestañas.", error);
+        console.log("Audio sincronizado:", error);
       });
     }
   }
 });
 
+// Guardar el segundo exacto constantemente
 if (musicaRomantica) {
   musicaRomantica.addEventListener('timeupdate', () => {
-    sessionStorage.setItem('tiempoMusica', musicaRomantica.currentTime);
+    if (!musicaRomantica.paused) {
+      sessionStorage.setItem('tiempoMusica', musicaRomantica.currentTime);
+    }
+  });
+
+  // 2. DETECTOR PARA CELULARES: Si se salen de la app o minimizan el navegador, la música se pausa al instante
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      musicaRomantica.pause();
+    } else {
+      // Si regresan a la pestaña y la música iba sonando, se reanuda donde iba
+      if (sessionStorage.getItem('musicaSonando') === 'true') {
+        musicaRomantica.play().catch(e => console.log("Reanudación pausada:", e));
+      }
+    }
   });
 }

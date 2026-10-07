@@ -8,25 +8,40 @@ const btnAbrirIntro = document.getElementById('btn-abrir-intro');
 const canvas = document.getElementById('confetti-canvas');
 const musicaRomantica = document.getElementById('musica-romantica');
 
-// Al cargar la página, verificamos si ya venía sonando de otra pestaña en la misma sesión
-window.addEventListener('DOMContentLoaded', () => {
+// 1. Sincronizar y mantener al cambiar de pestaña o usar el botón "Atrás"
+window.addEventListener('pageshow', (event) => {
   if (musicaRomantica) {
     const estadoMusica = sessionStorage.getItem('musicaSonando');
     const tiempoGuardado = sessionStorage.getItem('tiempoMusica');
 
-    if (estadoMusica === 'true' && tiempoGuardado) {
-      musicaRomantica.currentTime = parseFloat(tiempoGuardado);
+    // Si la página se cargó desde la caché del navegador (al presionar "Atrás")
+    if (event.persisted || (estadoMusica === 'true' && tiempoGuardado)) {
+      musicaRomantica.currentTime = parseFloat(tiempoGuardado || 0);
       musicaRomantica.play().catch(error => {
-        console.log("Audio continuo sincronizado:", error);
+        console.log("Audio sincronizado:", error);
       });
     }
   }
 });
 
-// Actualizamos el segundo en curso usando sessionStorage
+// Guardar el segundo exacto constantemente
 if (musicaRomantica) {
   musicaRomantica.addEventListener('timeupdate', () => {
-    sessionStorage.setItem('tiempoMusica', musicaRomantica.currentTime);
+    if (!musicaRomantica.paused) {
+      sessionStorage.setItem('tiempoMusica', musicaRomantica.currentTime);
+    }
+  });
+
+  // 2. DETECTOR PARA CELULARES: Si se salen de la app o minimizan el navegador, la música se pausa al instante
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      musicaRomantica.pause();
+    } else {
+      // Si regresan a la pestaña y la música iba sonando, se reanuda donde iba
+      if (sessionStorage.getItem('musicaSonando') === 'true') {
+        musicaRomantica.play().catch(e => console.log("Reanudación pausada:", e));
+      }
+    }
   });
 }
 
