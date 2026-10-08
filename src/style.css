@@ -1719,45 +1719,211 @@ h1, h2, .hero-titulo, .franja-titulo {
 /* =================================================================
    PREMIOS
    ================================================================= */
-.boton-principal {
-  background: var(--vino);
+/* =================================================================
+   ESTILOS OPTIMIZADOS PARA PREMIOS Y MODAL FLOTANTE
+   ================================================================= */
+.tab-panel[data-tab="premios"] {
+  position: relative;
+  min-height: 75vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px 80px;
+}
+
+.premios-contenedor-principal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.premios-hero-content {
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+}
+
+.premios-sub-tag {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: 1.15rem;
+  color: var(--rosa);
+  letter-spacing: 1px;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.ruleta-sorpresa-box {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  margin: 35px auto;
+  border-radius: 50%;
+  /* Degradado circular exclusivo con los tonos románticos acordes */
+  background: conic-gradient(from 0deg, #b3123f, #c9a24b, #d88fa0, #6a1b5c, #b3123f);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 15px 35px rgba(106, 27, 92, 0.3), 0 0 25px rgba(201, 162, 75, 0.4);
+  transition: transform 0.3s ease;
+}
+
+.ruleta-circulo {
+  width: 146px;
+  height: 146px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.ruleta-icono-centro {
+  font-size: 3.5rem;
+  animation: latidoIcono 2s ease-in-out infinite;
+  /* El icono se queda con su color original intacto, sin filtros raros */
+}
+
+.ruleta-sorpresa-box.girando {
+  animation: giroRuletaLimpio 0.3s linear infinite;
+}
+
+@keyframes giroRuletaLimpio {
+  0% { 
+    transform: rotate(0deg) scale(1);
+    filter: brightness(1);
+  }
+  50% { 
+    transform: rotate(180deg) scale(1.06);
+    filter: brightness(1.15); /* Solo un brillo sutil, cero tonos verdes */
+  }
+  100% { 
+    transform: rotate(360deg) scale(1);
+    filter: brightness(1);
+  }
+}
+
+.boton-principal-premio {
+  background: linear-gradient(135deg, #b3123f 0%, #6a1b5c 100%);
   color: white;
   border: none;
-  padding: 14px 30px;
-  font-size: 0.8rem;
+  padding: 16px 36px;
+  font-size: 0.95rem;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
+  border-radius: 30px;
   cursor: pointer;
-  transition: background 0.2s ease;
+  font-weight: 600;
+  box-shadow: 0 8px 25px rgba(179, 18, 63, 0.3);
+  transition: all 0.3s ease;
 }
 
-.boton-principal:hover {
-  background: var(--rosa);
+.boton-principal-premio:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 12px 30px rgba(106, 27, 92, 0.4);
 }
 
-.premio {
-  margin-top: 25px;
-  padding: 0 20px;
+/* MODAL / TARJETA FLOTANTE (Respeta la barra de navegación superior) */
+.modal-premio-overlay {
+  position: fixed;
+  top: 70px; /* Deja libre el espacio de la barra de navegación de arriba */
+  left: 0;
+  width: 100vw;
+  height: calc(100vh - 70px);
+  background: rgba(30, 10, 25, 0.7);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   display: flex;
+  align-items: center;
   justify-content: center;
+  z-index: 40; /* Queda debajo del navbar (que tiene z-index 60) para no taparlo */
+  padding: 20px;
 }
 
-.premio-borde {
-  border: 2px dashed var(--dorado);
-  border-radius: 6px;
-  padding: 26px 35px;
-  background: #fffbf0;
-  max-width: 380px;
+.modal-premio-tarjeta {
+  position: relative;
+  background: linear-gradient(145deg, #7a1c3f 0%, #b3123f 40%, #5b1465 100%);
+  border: 2px solid var(--dorado);
+  border-radius: 24px;
+  padding: 40px 30px;
+  max-width: 480px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5), 0 0 30px rgba(201, 162, 75, 0.4);
+  color: white;
 }
 
-.premio-titulo {
+.modal-corazones-decorativos {
+  font-size: 1.3rem;
+  letter-spacing: 8px;
+  margin-bottom: 10px;
+  color: var(--rosa-claro);
+}
+
+.modal-premio-titulo {
   font-family: 'Playfair Display', Georgia, serif;
-  color: var(--texto);
-  margin-bottom: 8px;
+  font-size: 1.7rem;
+  color: #fff;
+  margin-bottom: 18px;
 }
 
-.premio-texto {
-  font-size: 1.05rem;
+.modal-premio-caja-texto {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.modal-premio-caja-texto .premio-texto {
+  font-size: 1.25rem;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  color: #fffafc;
+  line-height: 1.5;
+}
+
+.modal-premio-botones {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-modal-accion {
+  padding: 11px 20px;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.25s ease;
+}
+
+.btn-modal-accion.principal {
+  background: #ffffff;
+  color: var(--vino);
+  border: none;
+}
+
+.btn-modal-accion.principal:hover {
+  background: var(--dorado);
+  color: white;
+}
+
+.btn-modal-accion.secundario {
+  background: transparent;
+  color: white;
+  border: 1px solid rgba(255,255,255,0.5);
+}
+
+.btn-modal-accion.secundario:hover {
+  background: rgba(255,255,255,0.15);
 }
 
 /* =================================================================

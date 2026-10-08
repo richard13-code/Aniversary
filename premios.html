@@ -30,17 +30,39 @@
 
   <main id="main-content">
     <section class="tab-panel activo" data-tab="premios">
-      <h2>Premios sorpresa</h2>
-      <p class="descripcion">Presiona el botón y gana un premio para canjear conmigo</p>
+      <div class="premios-contenedor-principal">
+        <div class="premios-hero-content">
+          <span class="premios-sub-tag">Ruleta del Amor</span>
+          <h2>Sorpresas Especiales</h2>
+          <p class="descripcion">Gira la ruleta y descubre un premio especial para canjear conmigo</p>
 
-      <button id="btn-generar-premio" class="boton-principal">Generar premio</button>
+          <!--  Ruleta -->
+          <div class="ruleta-sorpresa-box" id="ruleta-box">
+            <div class="ruleta-circulo">
+              <span class="ruleta-icono-centro">⭐</span>
+            </div>
+            <div class="ruleta-anillo-brillo"></div>
+          </div>
 
-      <div class="premio oculto" id="premio-resultado">
-        <div class="premio-borde">
-          <p class="premio-titulo">Premio ganado</p>
-          <p class="premio-texto" id="premio-texto">...</p>
+          <button id="btn-generar-premio" class="boton-principal-premio">Girar Ruleta</button>
+
         </div>
       </div>
+      
+      <div class="modal-premio-overlay oculto" id="premio-modal" style="display: none">
+        <div class="modal-premio-tarjeta">
+          <div class="modal-corazones-decorativos">💖 💝 💖</div>
+          <h3 class="modal-premio-titulo">¡Premio Ganado!</h3>
+          <div class="modal-premio-caja-texto">
+            <p class="premio-texto" id="premio-texto">...</p>
+          </div>
+          <div class="modal-premio-botones">
+            <button id="btn-otro-premio" class="btn-modal-accion secundario">Girar de nuevo 🎡</button>
+            <button id="btn-cerrar-premio" class="btn-modal-accion principal">Cerrar ❌</button>
+          </div>
+        </div>
+      </div>
+
     </section>
 
     <footer class="footer">
@@ -51,7 +73,9 @@
     </footer>
   </main>
 
-  <audio id="musica-romantica" src="src/Romantic_Flight.mp3" preload="auto"> 
+  <canvas id="confetti-canvas"></canvas>
+  <audio id="musica-romantica" src="src/Romantic_Flight.mp3" preload="auto"></audio> 
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <script src="src/JavaScript/premios.js"></script>
 </body>
 </html>
