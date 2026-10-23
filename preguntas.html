@@ -35,6 +35,26 @@
       <div id="preguntas-contenedor"></div>
     </section>
 
+    <!-- MODAL O SECCIÓN DE VIDEO SECRETO DESBLOQUEABLE -->
+    <div class="video-sorpresa-overlay oculto" id="video-sorpresa-modal" style="display: none;">
+      <div class="video-sorpresa-tarjeta">
+        <div class="modal-corazones-decorativos">💖 🎥 💖</div>
+        <h3 class="modal-premio-titulo">¡Felicidades! 🎉</h3>
+        <p class="video-sub-texto">Desbloqueaste el video secreto.</p>
+        
+        <div class="video-contenedor-reproductor">
+          <video id="video-secreto" controls width="100%">
+            <source src="src/fotos/video1.mp4" type="video/mp4">
+            Tu navegador no soporta videos HTML5.
+          </video>
+        </div>
+
+        <div class="modal-premio-botones" style="margin-top: 20px;">
+          <button id="btn-cerrar-video" class="btn-modal-accion principal">Cerrar y guardar 💖</button>
+        </div>
+      </div>
+    </div>
+
     <footer class="footer">
       <div class="footer-corazones" aria-hidden="true">
         <span>♥</span><span>♥</span><span>♥</span>
@@ -43,7 +63,9 @@
     </footer>
   </main>
 
+  <canvas id="confetti-canvas"></canvas>
   <audio id="musica-romantica" src="src/Romantic_Flight.mp3" preload="auto"></audio> 
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <script src="src/JavaScript/preguntas.js"></script>
 </body>
 </html>

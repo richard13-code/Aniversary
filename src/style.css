@@ -2508,3 +2508,117 @@ h1, h2, .hero-titulo, .franja-titulo {
     font-size: 1.25rem !important;
   }
 }
+
+/* =================================================================
+   ESTILOS PARA EL MODAL DEL VIDEO SECRETO (CUESTIONARIO)
+   ================================================================= */
+.video-sorpresa-overlay {
+  position: fixed;
+  top: 70px; /* Deja libre el navbar de arriba */
+  left: 0;
+  width: 100vw;
+  height: calc(100vh - 70px);
+  background: rgba(30, 10, 25, 0.8);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 20px;
+}
+
+.video-sorpresa-tarjeta {
+  position: relative;
+  background: linear-gradient(145deg, #7a1c3f 0%, #b3123f 40%, #5b1465 100%);
+  border: 2px solid var(--dorado);
+  border-radius: 24px;
+  padding: 35px 30px;
+  max-width: 560px;
+  width: 95%;
+  text-align: center;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 0 0 35px rgba(201, 162, 75, 0.4);
+  color: white;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.video-sub-texto {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.95rem;
+  color: #fffafc;
+  margin-bottom: 15px;
+  opacity: 0.9;
+}
+
+.video-contenedor-reproductor {
+  border-radius: 14px;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  background: #000;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+}
+
+.video-contenedor-reproductor video {
+  display: block;
+  width: 100%;
+  max-height: 320px;
+  object-fit: cover;
+}
+
+/* =================================================================
+   ESTILOS PARA LAS PREGUNTAS Y OPCIONES (Fondo oscuro y legible)
+   ================================================================= */
+.tarjeta-pregunta {
+  background: rgba(206, 148, 187, 0.85) !important;
+  border: 1px solid rgba(201, 162, 75, 0.4) !important;
+  padding: 25px !important;
+  border-radius: 20px !important;
+  margin-bottom: 25px !important;
+  text-align: left !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.tarjeta-pregunta p {
+  font-family: 'Playfair Display', Georgia, serif !important;
+  font-weight: 600 !important;
+  color: #1a1919 !important;
+  font-size: 1.2rem !important;
+  margin-bottom: 15px !important;
+  letter-spacing: 0.5px;
+}
+
+.tarjeta-pregunta label {
+  display: flex !important;
+  align-items: center;
+  margin: 12px 0 !important;
+  cursor: pointer !important;
+  color: #000000 !important; /* Rosa muy pálido, súper legible */
+  font-family: 'Poppins', sans-serif !important;
+  font-size: 1rem !important;
+  padding: 8px 12px;
+  border-radius: 10px;
+  transition: background 0.2s ease;
+}
+
+.tarjeta-pregunta label:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.tarjeta-pregunta input[type="radio"] {
+  accent-color: var(--dorado);
+  transform: scale(1.2);
+  margin-right: 12px;
+}
+
+.tarjeta-pregunta .sorpresa-desbloqueada {
+  color: #6d1d30 !important; /* Un rosa pastel cálido y romántico */
+  font-family: 'Poppins', sans-serif !important;
+  font-size: 0.95rem;
+  font-style: italic;
+  margin-top: 12px;
+  padding: 8px 12px;
+  background: rgba(204, 47, 178, 0.3); /* Fondo vino muy suave */
+  border-left: 3px solid var(--dorado); /* Línea decorativa dorada al lado */
+  border-radius: 0 8px 8px 0;
+}

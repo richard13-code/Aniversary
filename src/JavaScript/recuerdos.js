@@ -94,22 +94,24 @@ function cerrarTarjetasYSubir() {
   }
 }
 
-// Escuchador global de clics optimizado
+// Escuchador global de clics optimizado (ignora el menú hamburguesa para que funcione)
 document.addEventListener('click', (e) => {
+  // Si dan clic en el botón de hamburguesa o dentro del menú móvil, no hacemos nada aquí para dejarlo fluir
+  if (e.target.closest('#btn-menu-movil') || e.target.closest('#navbar-tabs')) {
+    return;
+  }
+
   const cardClickeada = e.target.closest('.ano-card');
   const cardAbierta = document.querySelector('.ano-card.abierto');
 
-  // Si se hizo clic fuera de cualquier tarjeta
   const clicFuera = !cardClickeada;
-  
-  // O si ya hay una tarjeta abierta y se hace clic en esa misma tarjeta (en cualquier parte de ella)
   const clicEnMismaTarjetaAbierta = cardAbierta && cardClickeada === cardAbierta;
 
   if (clicFuera || clicEnMismaTarjetaAbierta) {
-    e.stopPropagation(); // Evita interferencias con otros scripts o eventos internos
+    e.stopPropagation(); 
     cerrarTarjetasYSubir();
   }
-}, true); // Usamos 'true' (capturing phase) para atrapar el clic antes de que se pierda en los elementos internos de la tarjeta
+}, true);// Usamos 'true' (capturing phase) para atrapar el clic antes de que se pierda en los elementos internos de la tarjeta
 
 // Botón "Atrás" SOLO para teléfonos (móviles)
 const esDispositivoMovil = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;

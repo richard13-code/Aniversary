@@ -10,12 +10,16 @@ const ruletaBox = document.getElementById('ruleta-box');
 
 if (btnGenerarPremio && premioModal && premioTexto) {
   const premios = [
-    'Una cena a tu elección, invita el novio 🍝',
+    'Una cena romántica 🍝',
     'Un día completo sin celular, solo tú y yo 📱❌',
     'Una maratón de películas que tú elijas 🍿',
-    'Un masaje de 20 minutos sin quejarme 💆‍♀️',
-    'El postre que tú quieras, cuando quieras 🍰',
-    'Un día donde tú decides todos los planes 👑'
+    'Un masaje de 30 minutos en todo el cuerpo 💆‍♀️',
+    'El postre que tú quieras 🍰',
+    'Paseo nocturno sin rumbo escuchando nuestra música 🎶🚗',
+    'Un día de picnic en el parque 🌳🥪',
+    'Un día de spa y jacuzzi 🛁🕯️',
+    'Una cita a ciegas 🗺️🚗',
+    'Una escapada a una cabaña solo tu y yo 🏡❤️'
   ];
 
   // Forzar el estado cerrado absoluto al entrar
