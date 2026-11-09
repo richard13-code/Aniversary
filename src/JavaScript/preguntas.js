@@ -8,52 +8,67 @@ const videoSecreto = document.getElementById('video-secreto');
 
 const preguntas = [
   {
+    enunciado: '¿Cuál es mi nombre?',
+    opciones: ['Ricardo', 'Richi', 'Amor', 'Brócolí'],
+    correcta: 2,
+    sorpresa: '¡Esooo! 🎉 Solo a mi me tienes que decir a mi',
+    mensajeIncorrecto: 'Nono 😑, ¡Soy tu amor y punto.!'
+  },
+  {
     enunciado: '¿Cuándo es nuestro aniversario?',
     opciones: ['6 de cada mes', '13 de cada mes', '22 de cada mes'],
     correcta: 0,
-    sorpresa: '¡Correcto! 🎉 De los dias mas especial a tu lado.'
+    sorpresa: '¡Correcto! 🎉 De los dias mas especial a tu lado.',
+    mensajeIncorrecto: 'Nono 😑, ¡te confundes de novio!'
   },
   {
     enunciado: '¿Cuántos años cumplimos este 6 de diciembre?',
     opciones: ['1 año', '2 años', '3 años'],
     correcta: 1,
-    sorpresa: '2 años y quiero muchísimos más contigo 💕'
+    sorpresa: '2 años y quiero muchísimos más contigo 💕',
+    mensajeIncorrecto: 'Nono 😑, ¡esa no es!'
   },
   {
     enunciado: '¿Cuál es mi comida favorita?',
     opciones: ['Chilaquiles', 'Tacos', 'Pozole'],
     correcta: 2,
-    sorpresa: '¡Correcto! 😋 Pero siempre elegiré comerte a ti.'
+    sorpresa: '¡Correcto! 😋 Pero siempre elegiré comerte a ti.',
+    mensajeIncorrecto: 'Tsss 😑, ¡Casi!'
   },
   {
     enunciado: '¿A dónde salimos a festejar mi primer cumpleaños como novios?',
     opciones: ['Hasbro City', 'Maquinas de juegos', 'Balneario'],
     correcta: 0,
-    sorpresa: '¡Correcto! 🎉 Ese día fue el comienzo de nuestras aventuras juntos.'
+    sorpresa: '¡Correcto! 🎉 Ese día fue el comienzo de nuestras aventuras juntos.',
+    mensajeIncorrecto: 'Mmm ya 😑, ¡no te acuerdas!'
   },
   {
     enunciado: '¿Cuál es mi película favorita?',
     opciones: ['Star Wars', 'Transformers', 'Avengers'],
     correcta: 1,
-    sorpresa: '¡Correcto! 🎬 Siempre me emociona ver esa película.'
+    sorpresa: '¡Correcto! 🎬 Siempre me emociona ver esa película.',
+    mensajeIncorrecto: 'Nono 😑, ¡esa no es!'
   },
   {
     enunciado: '¿Cuál es mi jugador favorito?',
     opciones: ['LeBron James','Michael Jordan', 'Stephen Curry', 'Kevin Durant'],
     correcta: 2,
-    sorpresa: '¡Correcto! 🏀 Pero ni sus tiros son tan perfectos como tú.'
+    sorpresa: '¡Correcto! 🏀 Pero ni sus tiros son tan perfectos como tú.',
+    mensajeIncorrecto: 'Tsss 😑, ¡fallaste!'
   },
   {
     enunciado: '¿Nos vamos a casar?',
     opciones: ['Sí', 'No'],
     correcta: 0,
-    sorpresa: '¡Correcto! 🎉 Mas te vale amor.'
+    sorpresa: '¡Correcto! 🎉 Mas te vale amor.',
+    mensajeIncorrecto: 'Que? 😑, ¡cómo que no!'
   },
   {
     enunciado: '¿Te vas a aburrir de mi o me vas a cambiar por otro?',
     opciones: ['Sí', 'No'],
     correcta: 1,
-    sorpresa: '¡Correcto! 🎉 Me vas aguantar toda la vida ehh.'
+    sorpresa: '¡Correcto! 🎉 Me vas aguantar toda la vida ehh.',
+    mensajeIncorrecto: 'Mmmm ya 😑, ¡segura?!'
   }
 ];
 
@@ -94,13 +109,16 @@ function cargarPreguntas() {
           btn.classList.add('correcta');
           btn.style.background = "rgba(46, 125, 50, 0.6)";
           sorpresaDiv.classList.remove('oculto');
+          sorpresaDiv.textContent = preg.sorpresa; // Mantiene el mensaje de éxito original
         } else {
           btn.classList.add('incorrecta');
           btn.style.background = "rgba(198, 40, 40, 0.6)";
           todosLosBotones[preg.correcta].classList.add('correcta');
           todosLosBotones[preg.correcta].style.background = "rgba(46, 125, 50, 0.6)";
           sorpresaDiv.classList.remove('oculto');
-          sorpresaDiv.textContent = 'Nono 😑, esta no era.';
+          
+          // AQUÍ SE MUESTRA EL MENSAJE EQUIVOCADO ESPECÍFICO DE ESTA PREGUNTA
+          sorpresaDiv.textContent = preg.mensajeIncorrecto; 
         }
 
         // Revisamos automáticamente si todas ya fueron respondidas correctamente

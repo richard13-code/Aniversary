@@ -2622,3 +2622,19 @@ h1, h2, .hero-titulo, .franja-titulo {
   border-left: 3px solid var(--dorado); /* Línea decorativa dorada al lado */
   border-radius: 0 8px 8px 0;
 }
+
+
+/* =================================================================
+   ESTILO EXCLUSIVO PARA FOTOS VERTICALES O ESPECÍFicas
+   ================================================================= */
+.foto-especial-box {
+  background: rgba(0, 0, 0, 0.25); /* Fondo elegante para rellenar los espacios laterales */
+  max-height: 420px;
+}
+
+.foto-especial-img {
+  object-fit: contain !important; /* Muestra la foto completa sin recortar */
+  max-height: 420px;
+  width: auto !important; /* Mantiene su proporción natural */
+  max-width: 100%;
+}
